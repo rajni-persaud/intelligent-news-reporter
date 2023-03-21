@@ -110,7 +110,7 @@ def phrase_to_date(phrase: str):
         "two",
         "one",
     ]
-    slangs = ["month", "week", "day", "yesterday", "today"]
+    slangs = ["month", "week", "day", "yesterday", "today", "year"]
     wordsInPhrase = phrase.split()
     for month in months:
         capital = month.capitalize()
@@ -137,6 +137,7 @@ def phrase_to_date(phrase: str):
         if slang in wordsInPhrase:
             datephrasefound["slang"] = slang
             break
+        # print(datephrasefound)
 
     if len(datephrasefound) == 1:
         if "month" in datephrasefound:
@@ -166,6 +167,9 @@ def phrase_to_date(phrase: str):
                 return rdate.strftime("%Y-%m-%d")
             elif datephrasefound["slang"] == "month":
                 rdate = today - relativedelta(months=1)
+                return rdate.strftime("%Y-%m-%d")
+            elif datephrasefound["slang"] == "year": 
+                rdate = today - relativedelta(years=1)
                 return rdate.strftime("%Y-%m-%d")
             elif (
                 datephrasefound["slang"] == "day"
