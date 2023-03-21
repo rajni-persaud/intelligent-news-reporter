@@ -186,46 +186,36 @@ walker tag_posts {
 
 // takes a post and applies the best tags to it
 walker apply_tags {
-
     can use.text_classify;
-    has min_confidence = 0.1;
+    has min_confidence = 0.15;
     has _post;
-
-    root: take -->[0];
+    root: take --> node::app_root;
     app_root: take --> node::tags;
-
     post {
         _post = here;
-        std.log("grabbed post node: " + _post.title);
+        std.log(“grabbed post node: ” + _post.title);
         take net.root(); //head back to root
     }
-
     tags {
         take --> node::tag;
     }
-
     tag {
-        std.log("examining tag: " + here.label);
-
+        std.log(“examining tag: ” + here.label);
         result = use.text_classify(
-            text = _post.title,
-            classes = -[tag_statement]->.text // pluck text value from nodes connected by tag_statement edges as list
+            text = _post.summary,
+            classes = -[tag_statement]->.text //pluck text value from nodes connected by tag_statement edges as list
         );
-
-        // grab index of match with highest score
-        match_index = result["match_idx"];
-        // grab the score
-        confidence = result["scores"][match_index];
-
-        // if it makes our acceptance confidence level, we consider it
+        //grab index of match with highest score
+        match_index = result[‘match_idx’];
+        //grab the score
+        confidence = result[‘scores’][match_index];
+        //if it makes our acceptable confidence level, we consider it
         if (confidence >= min_confidence) {
-
-            // establish the edge, if it doesn't exist
-            _post <+[tag_post(confidence = confidence)]+> here;
-            std.log("added tag" + here.label);
-
+            //establish the edge, if it doesnt exist
+            if( _post in <-[tag_post]-> ): std.log(“already added tag ” + here.label);
+            else: _post <+[tag_post(confidence = confidence)]+> here;
         } else {
-            std.log("confidence too low, skipping");
+            std.log(“confidence too low, skipping”);
         }
     }
 }
@@ -374,7 +364,7 @@ walker apply_tag_filter {
 
     tag { // while on tag node go to every post connected to this tag
         std.log("getting posts connected to "+here.label+" tag node");
-        take --> node::post;
+        take -[tag_post]-> node::post;
         // report -->;
     }
 
@@ -385,19 +375,23 @@ walker apply_tag_filter {
 }
 
 walker apply_post_filter {
+    can inr.phrase_to_date;
     has entities;
 
     post {
         // report entities;
-        if ("news_source" in entities.dict::keys) {
+        entities_extracted = entities.dict::keys;
+
+        if ("news_source" in entities_extracted && "timestamp" in entities_extracted) {
+            std.log("extracted news source and timestamp");
+            date_published = inr.phrase_to_date(entities["timestamp"][0]["text"]);
             for extracted_source in entities["news_source"] {
-                std.log("extracted news source: "+extracted_source["text"]);
-                // if extracted tag matches the label of any tag then go to that tag node
-                if (extracted_source["text"] == (here.source).str::lower){
+                if (extracted_source["text"] == (here.source).str::lower and date_published in here.published){
                     report here;
                 }
             }
         }
+
     }
 }
 
