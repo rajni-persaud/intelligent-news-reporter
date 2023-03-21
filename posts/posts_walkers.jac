@@ -193,29 +193,29 @@ walker apply_tags {
     app_root: take --> node::tags;
     post {
         _post = here;
-        std.log(“grabbed post node: ” + _post.title);
+        std.log("grabbed post node: " + _post.title);
         take net.root(); //head back to root
     }
     tags {
         take --> node::tag;
     }
     tag {
-        std.log(“examining tag: ” + here.label);
+        std.log("examining tag: " + here.label);
         result = use.text_classify(
             text = _post.summary,
             classes = -[tag_statement]->.text //pluck text value from nodes connected by tag_statement edges as list
         );
         //grab index of match with highest score
-        match_index = result[‘match_idx’];
+        match_index = result['match_idx'];
         //grab the score
-        confidence = result[‘scores’][match_index];
+        confidence = result['scores'][match_index];
         //if it makes our acceptable confidence level, we consider it
         if (confidence >= min_confidence) {
             //establish the edge, if it doesnt exist
-            if( _post in <-[tag_post]-> ): std.log(“already added tag ” + here.label);
+            if( _post in <-[tag_post]-> ): std.log("already added tag: " + here.label);
             else: _post <+[tag_post(confidence = confidence)]+> here;
         } else {
-            std.log(“confidence too low, skipping”);
+            std.log("confidence too low, skipping");
         }
     }
 }
@@ -391,6 +391,32 @@ walker apply_post_filter {
                 }
             }
         }
+
+        if ("timestamp" in entities_extracted) {
+            date_published = inr.phrase_to_date(entities["timestamp"][0]["text"]);
+            std.log("getting all posts on: "+date_published);
+            if (date_published in here.published){
+                report here;
+            }
+        }
+
+
+        // if ("news_source" in entities.dict::keys) {
+        //     for extracted_source in entities["news_source"] {
+        //         std.log("extracted news source: "+extracted_source["text"]);
+        //         // if extracted tag matches the label of any tag then go to that tag node
+        //         if (extracted_source["text"] == (here.source).str::lower){
+        //             report here;
+        //         }
+        //     }
+        // }
+
+        // if ("timestamp" in entities.dict::keys) {
+        //     for extracted_time in entities["timestamp"] {
+        //         std.log("extracted timestamp: "+extracted_time["text"]);
+        //         report inr.phrase_to_date(extracted_time["text"]);
+        //     }
+        // }
 
     }
 }
