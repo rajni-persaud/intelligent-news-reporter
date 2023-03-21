@@ -1,0 +1,19 @@
+[
+  "show me all the [crime](tag) news reports on [March 27, 2021](timestamp)",
+  "Show me all the articles from [Kaieteur News](news_source) that relate to [Business](tag) between [March 27, 2020](timestamp_start) and [today](timestamp_end)",
+  "What is the [latest](timestamp) news on the ongoing [COVID-19 pandemic](tag)?",
+  "Can you give me a summary of the [major world events](tag) that happened in the [last 24 hours](timestamp)?",
+  "Can you provide an analysis of the [political](tag) situation in France?",
+  "Can you give me a rundown of the top news stories in a specific industry, such as [technology](tag) or [finance](tag)?",
+  "What is the [latest](timestamp) [scientific breakthrough or discovery](tag) that has made headlines?",
+  "What are the top [world](tag) news stories from [CNN](news_source) in the [past 24 hours](timestamp)?",
+  "Can you give me the [latest](timestamp) [national](tag) news from the [Guyana Chronicle](news_source)?",
+  "I'm interested in [local](tag) news from [The Sydney Morning Herald](news_source) from the [past week](timestamp). What's been going on?",
+  "What's the most important [business](tag) news from [Deutsche Welle](news_source) [today](timestamp)?",
+  "Has [Al Jazeera](news_source) reported on any interesting [sports](tag) stories in the [past 48 hours](timestamp)?",
+  "Can you recommend any [recent](timestamp) [entertainment](tag) news articles from [The Guardian](news_source)?",
+  "What are the [latest](timestamp) [health and science](tag) developments according to [BBC News](news_source) in the [past 7 days](timestamp)?",
+  "What [technology](tag) news has [The Times of India](news_source) published in the [past month](timestamp)?",
+  "What [political](tag) news stories have been covered by [El País](news_source) [this week](timestamp)?",
+  "Has [China Daily](news_source) reported on any recent [environmental](tag) issues in the [past 48 hours](timestamp)?"
+]

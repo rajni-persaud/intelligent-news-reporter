@@ -1,0 +1,37 @@
+{
+    "Politics": [
+        "government policies",
+        "elections", 
+        "political leaders", 
+        "international relations", 
+        "current affairs"
+    ],
+    "Business": [
+        "the economy",
+        "financial markets",
+        "profit",
+        "business",
+        "oil and gas",
+        "industry trends",
+        "corporate mergers and acquisitions"
+    ],
+    "Crime": [
+        "murder",
+        "robbery",
+        "trafficing in persons",
+        "manslaughter",
+        "arrested",
+        "bandit",
+        "shooting",
+        "lawsuit",
+        "fraud",
+        "rape"
+    ],
+    "Entertainment": [
+        "movies",
+        "TV shows",
+        "music",
+        "celebrities",
+        "cultural events"
+    ]
+}
