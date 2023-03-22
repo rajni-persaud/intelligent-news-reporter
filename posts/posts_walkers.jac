@@ -306,6 +306,10 @@ walker get_similar_tag {
     has extracted_tag;
     has entities;
 
+    has anchor similar_tag;
+
+    max_score = 0;
+
     take --> node::tag;
 
     tag {
@@ -313,15 +317,10 @@ walker get_similar_tag {
 
         cos_score = use.qa_similarity(text1 = here.label, text2 = extracted_tag);
 
-        if (cos_score >= 0.15) {
-            std.log("grabbing posts connected to: "+ here.label);
-            take -[tag_post]-> node::post;
+        if (cos_score > max_score) {
+            max_score = cos_score;
+            similar_tag = here.label;
         }
-
-    }
-
-    post {
-        spawn here walker::apply_post_filter(entities=entities);
     }
 }
 
@@ -352,7 +351,9 @@ walker apply_tag_filter {
             // else spawan walker to get a similar tag
             else {
                 std.log("looking for a similar tag related to: "+extracted_tag["text"]);
-                spawn here walker::get_similar_tag(extracted_tag=extracted_tag["text"], entities=entities);
+                similar_tag = spawn here walker::get_similar_tag(extracted_tag=extracted_tag["text"], entities=entities);
+                std.log("found similar tag: "+ similar_tag);
+                take --> node::tag(label == similar_tag);
             }
         }
         
@@ -364,12 +365,10 @@ walker apply_tag_filter {
 
     tag { // while on tag node go to every post connected to this tag
         std.log("getting posts connected to "+here.label+" tag node");
-        take -[tag_post]-> node::post;
-        // report -->;
+        take <-[tag_post]-> node::post;
     }
 
     post {
-        // report here;
         spawn here walker::apply_post_filter(entities=entities);
     }
 }
