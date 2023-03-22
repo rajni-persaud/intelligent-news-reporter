@@ -381,42 +381,54 @@ walker apply_post_filter {
         // report entities;
         entities_extracted = entities.dict::keys;
 
-        if ("news_source" in entities_extracted && "timestamp" in entities_extracted) {
-            std.log("extracted news source and timestamp");
-            date_published = inr.phrase_to_date(entities["timestamp"][0]["text"]);
+        std.log("checking post: "+here.title);
+
+        // checking for news source, timestamp_start, timestamp_end
+        if ("news_source" in entities_extracted && "timestamp_start" in entities_extracted && "timestamp_end" in entities_extracted) {
+            start_date = inr.phrase_to_date(entities["timestamp_start"][0]["text"]);
+            end_date = inr.phrase_to_date(entities["timestamp_end"][0]["text"]);
             for extracted_source in entities["news_source"] {
-                if (extracted_source["text"] == (here.source).str::lower and date_published in here.published){
+                if (extracted_source["text"] == (here.source).str::lower){
                     report here;
                 }
             }
         }
-
-        if ("timestamp" in entities_extracted) {
+        // checking for news source, timestamp
+        elif ("news_source" in entities_extracted && "timestamp" in entities_extracted) {
             date_published = inr.phrase_to_date(entities["timestamp"][0]["text"]);
-            std.log("getting all posts on: "+date_published);
+            for extracted_source in entities["news_source"] {
+                if (extracted_source["text"] == (here.source).str::lower && date_published in here.published){
+                    report here;
+                }
+            }
+        }
+        // checking for timestamp_start, timestamp_end
+        elif ("timestamp_start" in entities_extracted && "timestamp_end" in entities_extracted) {
+            start_date = inr.phrase_to_date(entities["timestamp_start"][0]["text"]);
+            end_date = inr.phrase_to_date(entities["timestamp_end"][0]["text"]);
+            //if (extracted_source["text"] == (here.source).str::lower){
+                report here;
+            //}
+        }
+        // checking for timestamp only
+        elif ("timestamp" in entities_extracted) {
+            date_published = inr.phrase_to_date(entities["timestamp"][0]["text"]);
             if (date_published in here.published){
                 report here;
             }
         }
-
-
-        // if ("news_source" in entities.dict::keys) {
-        //     for extracted_source in entities["news_source"] {
-        //         std.log("extracted news source: "+extracted_source["text"]);
-        //         // if extracted tag matches the label of any tag then go to that tag node
-        //         if (extracted_source["text"] == (here.source).str::lower){
-        //             report here;
-        //         }
-        //     }
-        // }
-
-        // if ("timestamp" in entities.dict::keys) {
-        //     for extracted_time in entities["timestamp"] {
-        //         std.log("extracted timestamp: "+extracted_time["text"]);
-        //         report inr.phrase_to_date(extracted_time["text"]);
-        //     }
-        // }
-
+        // checking for news_source only
+        elif ("news_source" in entities.dict::keys) {
+            for extracted_source in entities["news_source"] {
+                std.log("extracted news source: "+extracted_source["text"]);
+                if (extracted_source["text"] == (here.source).str::lower){
+                    report here;
+                }
+            }
+        }
+        else {
+            report here;
+        }
     }
 }
 
