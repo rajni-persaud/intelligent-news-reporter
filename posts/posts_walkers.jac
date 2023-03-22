@@ -332,6 +332,7 @@ walker apply_tag_filter {
     can use.qa_similarity;
 
     entities = spawn here walker::query_entities(utterance=query);
+    std.log(entities);
 
     root: take -->[0];
     app_root {
@@ -378,7 +379,7 @@ walker apply_post_filter {
     has entities;
 
     post {
-        // report entities;
+
         entities_extracted = entities.dict::keys;
 
         std.log("checking post: "+here.title);
@@ -388,7 +389,7 @@ walker apply_post_filter {
             start_date = inr.phrase_to_date(entities["timestamp_start"][0]["text"]);
             end_date = inr.phrase_to_date(entities["timestamp_end"][0]["text"]);
             for extracted_source in entities["news_source"] {
-                if (extracted_source["text"] == (here.source).str::lower){
+                if (extracted_source["text"] == (here.source).str::lower && (date.date_day_diff(start_date, here.published) >= 0) && (date.date_day_diff(here.published, end_date) >= 0)){
                     report here;
                 }
             }
@@ -406,9 +407,9 @@ walker apply_post_filter {
         elif ("timestamp_start" in entities_extracted && "timestamp_end" in entities_extracted) {
             start_date = inr.phrase_to_date(entities["timestamp_start"][0]["text"]);
             end_date = inr.phrase_to_date(entities["timestamp_end"][0]["text"]);
-            //if (extracted_source["text"] == (here.source).str::lower){
+            if ((date.date_day_diff(start_date, here.published) >= 0) && (date.date_day_diff(here.published, end_date) >= 0)){
                 report here;
-            //}
+            }
         }
         // checking for timestamp only
         elif ("timestamp" in entities_extracted) {
