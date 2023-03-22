@@ -332,7 +332,6 @@ walker apply_tag_filter {
     can use.qa_similarity;
 
     entities = spawn here walker::query_entities(utterance=query);
-    std.log(entities);
 
     root: take -->[0];
     app_root {
@@ -414,6 +413,7 @@ walker apply_post_filter {
         // checking for timestamp only
         elif ("timestamp" in entities_extracted) {
             date_published = inr.phrase_to_date(entities["timestamp"][0]["text"]);
+            std.log(date_published);
             if (date_published in here.published){
                 report here;
             }

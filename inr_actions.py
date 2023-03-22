@@ -21,6 +21,7 @@ def remove_html_tags(text: str):
 def phrase_to_date(phrase: str):
     today = date.today()
     datephrasefound = {}
+      
     months = [
         "january",
         "february",
@@ -110,34 +111,58 @@ def phrase_to_date(phrase: str):
         "two",
         "one",
     ]
-    slangs = ["month", "week", "day", "yesterday", "today", "year"]
+    slangs = ["month", "week", "day", "yesterday", "today","year"]
     wordsInPhrase = phrase.split()
+    for i in range(1950,2024):
+        if str(i) in wordsInPhrase:
+            datephrasefound["year"] = i
+            wordsInPhrase.remove(str(i))
+
     for month in months:
         capital = month.capitalize()
-        if month in wordsInPhrase or capital in wordsInPhrase:
+        if month in wordsInPhrase: 
             datephrasefound["month"] = month
+            wordsInPhrase.remove(month)
+            break
+
+        if capital in wordsInPhrase:
+            datephrasefound["month"] = month
+            wordsInPhrase.remove(capital)
             break
 
     for day in weekdays:
         capital = day.capitalize()
-        if day in wordsInPhrase or capital in wordsInPhrase:
+        if day in wordsInPhrase:  
             datephrasefound["weekDay"] = day
+            wordsInPhrase.remove(day)
+            break
+        
+        if capital in wordsInPhrase:
+            datephrasefound["weekDay"] = day
+            wordsInPhrase.remove(capital)
             break
 
+
     for (number, numberword) in zip(numbers, numberwords):
-        if (
-            number in wordsInPhrase
-            or numberword in wordsInPhrase
-            or phrase.find(number) != -1
-        ):
+        if number in wordsInPhrase:
             datephrasefound["number"] = number
+            wordsInPhrase.remove(number)
+            break
+
+        if numberword in wordsInPhrase:
+            datephrasefound["number"] = number
+            wordsInPhrase.remove(numberword)
             break
 
     for slang in slangs:
         if slang in wordsInPhrase:
             datephrasefound["slang"] = slang
             break
+    
         # print(datephrasefound)
+        # print(datephrasefound)
+
+    # print(datephrasefound)
 
     if len(datephrasefound) == 1:
         if "month" in datephrasefound:
@@ -168,7 +193,7 @@ def phrase_to_date(phrase: str):
             elif datephrasefound["slang"] == "month":
                 rdate = today - relativedelta(months=1)
                 return rdate.strftime("%Y-%m-%d")
-            elif datephrasefound["slang"] == "year": 
+            elif datephrasefound["slang"] == "year":
                 rdate = today - relativedelta(years=1)
                 return rdate.strftime("%Y-%m-%d")
             elif (
@@ -239,21 +264,27 @@ def phrase_to_date(phrase: str):
                 rdate = thisyear - relativedelta(years=1)
                 return rdate.strftime("%Y-%m-%d")
 
+        elif "month" in datephrasefound and "year" in datephrasefound:
+            rdate = datetime(
+                int(datephrasefound["year"]),
+                (months.index(datephrasefound["month"]) + 1),
+                1
+            )
+            return rdate.strftime("%Y-%m-%d")
         else:
             return today.strftime("%Y-%m-%d")
+   
+   
+    if len(datephrasefound) == 3:
+        if "month" in datephrasefound and "number" in datephrasefound and "year" in datephrasefound:
+            rdate = datetime(
+                    int(datephrasefound["year"]),
+                    (months.index(datephrasefound["month"]) + 1),
+                    int(datephrasefound["number"]),
+                )
+            return rdate.strftime("%Y-%m-%d")
     else:
         return today.strftime("%Y-%m-%d")
-
-@jaseci_action(act_group=["inr"], allow_remote=True)
-# takes 2 lists and maps creates a dictionary of key:value pairs
-def zip_list(d_keys: list, d_values: list):
-    if(len(d_keys) == len(d_values)):
-        result = {}
-        for i in range(len(d_keys)):
-            result[d_keys[i]] = d_values[i] 
-        return result
-    else:
-        raise Exception("Both lists must have the same length.")
 
 @jaseci_action(act_group=["inr"], allow_remote=True)
 # takes a string (item) and a dictionary; returns all other items with the same value
