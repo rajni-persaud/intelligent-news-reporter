@@ -380,6 +380,7 @@ walker apply_post_filter {
     post {
 
         entities_extracted = entities.dict::keys;
+        report entities;
 
         std.log("checking post: "+here.title);
 
@@ -413,7 +414,7 @@ walker apply_post_filter {
         // checking for timestamp only
         elif ("timestamp" in entities_extracted) {
             date_published = inr.phrase_to_date(entities["timestamp"][0]["text"]);
-            std.log(date_published);
+            report date_published;
             if (date_published in here.published){
                 report here;
             }
@@ -532,4 +533,44 @@ walker get_related_posts {
     post {
         report -[related]-> node::post;
     }
+}
+
+walker intent_classifier {
+    has utterance;
+    has anchor intent = "";
+
+    can classify_intent { 
+        
+        try {
+            intent_data = file.load_json(global.intent_data);
+        } else {
+            std.log("Could not load intent data.");
+        }
+        
+        if(intent_data) {
+            min_confidence = global.min_intent_confidence;
+        
+            for item in intent_data {
+
+                statements = intent_data[item];
+        
+                predicted_intent = use.text_classify(
+                    text = utterance,
+                    classes = statements.list
+                );
+
+                match_index = predicted_intent['match_idx'];
+                confidence = predicted_intent['scores'][match_index];
+                if (confidence > min_confidence) {
+                    min_confidence = confidence;
+                    intent = item;
+                }                
+            }
+        }    
+        
+    }
+
+    ::classify_intent;
+
+    report intent;
 }
