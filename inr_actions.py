@@ -23,6 +23,17 @@ def phrase_to_date(phrase: str):
     else: return (date.today()).strftime("%Y-%m-%d")
 
 @jaseci_action(act_group=["inr"], allow_remote=True)
+# takes 2 lists and maps creates a dictionary of key:value pairs
+def zip_list(d_keys: list, d_values: list):
+    if(len(d_keys) == len(d_values)):
+        result = {}
+        for i in range(len(d_keys)):
+            result[d_keys[i]] = d_values[i] 
+        return result
+    else:
+        raise Exception("Both lists must have the same length.")
+
+@jaseci_action(act_group=["inr"], allow_remote=True)
 # takes a string (item) and a dictionary; returns all other items with the same value
 def get_cluster_list(item: str, clusters: dict):
     cluster_keys = list(clusters.keys())
