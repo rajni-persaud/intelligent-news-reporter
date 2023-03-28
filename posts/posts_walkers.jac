@@ -574,3 +574,34 @@ walker intent_classifier {
 
     report intent;
 }
+
+walker intent_search {
+    has query;
+    has intent;
+
+    intent = spawn here walker::intent_classifier(utterance=query);
+
+    if (intent): std.log ("Intent: "+ intent);
+
+    if(!query) {
+        report:status = 400;
+        report "Missing required parameter";
+        disengage;
+    }
+
+    if(!intent) {
+        report "No intent found";
+        disengage;
+    }
+
+    if(intent == "semantic_search") {
+        spawn here walker::semantic_search(query=query);
+    }
+    elif(intent == "entity_search") {
+        spawn here walker::apply_tag_filter(query=query);
+    }
+    else {
+        report intent;
+    }
+
+}
