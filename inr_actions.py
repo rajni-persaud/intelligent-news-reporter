@@ -47,3 +47,8 @@ def get_cluster_list(item: str, clusters: dict):
         return cluster_list
     else:
         raise Exception("'{item}' not found in list {list}".format(item=item, list=list(clusters.keys())))
+    
+#replaces all occurrences of old_word with new_word in text
+@jaseci_action(act_group=["utils"], allow_remote=True)
+def replace_word(text, old_word, new_word):
+    return re.sub(r'\b{}\b'.format(old_word), new_word, text)

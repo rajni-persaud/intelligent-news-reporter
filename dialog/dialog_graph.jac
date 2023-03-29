@@ -26,12 +26,12 @@ node dialog_state {
             if(visitor.session_id): _session = spawn net.root() walker::load_user_session(session_id = visitor.session_id);
             else: _session = spawn net.root() walker::load_user_session;
 
-            // visitor.session_id = _session.session_id;
-            // if(_session.session_data) {
-            //     for item in _session.session_data.dict::keys {
-            //         if(item != "utterance"): visitor.context[item] = _session.session_data[item];
-            //     }
-            // }  
+            visitor.session_id = _session.session_id;
+            if(_session.session_data) {
+                for item in _session.session_data.dict::keys {
+                    if(item != "utterance"): visitor.context[item] = _session.session_data[item];
+                }
+            }  
             visitor.resumed = true;
         }
     }
@@ -142,18 +142,18 @@ node dialog_state {
         //establish default sentiment
         sentiment_result = "neutral";
         
-        // sentiment_data = sentiment.predict([visitor.utterance]);
-        // visitor._debug.dict::update({"sentiment_data" : sentiment_data});
+        sentiment_data = sentiment.predict([visitor.utterance]);
+        visitor._debug.dict::update({"sentiment_data" : sentiment_data});
         
         //parse and standardize sentiment data {class,confidence}
-        // if(sentiment_data) {
-        //     item = sentiment_data[0];
-        //     if( item["score"] >= global.min_sentiment_confidence ) {
-        //         sentiment_result = sentiment_classes[item["label"]];
-        //     }
-        // }
+        if(sentiment_data) {
+            item = sentiment_data[0];
+            if( item["score"] >= global.min_sentiment_confidence ) {
+                sentiment_result = sentiment_classes[item["label"]];
+            }
+        }
 
-        // visitor.sentiment = sentiment_result;
+        visitor.sentiment = sentiment_result;
 
     }
 

@@ -1,6 +1,6 @@
 actions load module jac_nlp.use_enc
 actions load module jac_nlp.tfm_ner
-actions load module jac_nlp.zs_classifier
+actions load module jac_nlp.sentiment
 actions load module jac_nlp.t5_sum
 actions load module jac_nlp.use_qa
 actions load local inr_actions.py
