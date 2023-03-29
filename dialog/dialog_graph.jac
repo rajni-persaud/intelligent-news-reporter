@@ -214,6 +214,30 @@ node greet:dialog_state {
     }
 }
 
+node semantic_search:dialog_state {
+    has name = "semantic_search";
+
+    can process {
+        visitor.next_state = (net.root()).info["jid"];
+    }
+
+    can nlg {
+        ::set_state_response;
+    }
+}
+
+node entity_search:dialog_state {
+    has name = "entity_search";
+
+    can process {
+        visitor.next_state = (net.root()).info["jid"];
+    }
+
+    can nlg {
+        ::set_state_response;
+    }
+}
+
 node dialog_end:dialog_state {
     has name = "dialog_end";
     //the talker walker disengages when it gets here
