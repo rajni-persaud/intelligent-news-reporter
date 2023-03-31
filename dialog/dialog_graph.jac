@@ -95,7 +95,7 @@ node dialog_state {
             //this can be modified if we swap out the NER without altering dependencies in the implementing app
             if(res.type == list || res.type == dict) {
                 for entity in res {
-                    if(entity["conf_score"] >= global.min_ner_confidence and entity['entity_text'] not in entity_config["ignore"]) {
+                    if(entity["conf_score"] >= global.min_ner_confidence) {
                         entity_label = entity["entity_value"];
                         entity_text = entity["entity_text"];
                         entity_confidence = entity["conf_score"];
