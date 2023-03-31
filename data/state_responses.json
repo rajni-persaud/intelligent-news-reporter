@@ -37,6 +37,21 @@
         "Absolutely, I'll use my natural language processing capabilities to find the most relevant news stories related to your search query.",
         "I'm on it. Let me search through our news sources and filter out the most important and recent news on your topic.",
         "Let me search our database and use our advanced AI algorithms to retrieve the most relevant news articles and reports for your search query."
-      ]
+    ],
+    "add_preferences": [
+      "Do you want to start getting updates about {{tag}}?",
+      "Do you want to start getting updates from {{news_source}}?",
+      "Do you want to start receiving updates about {{tag}} from {{news_source}}?"
+    ],
+    "update_preferences": [
+      "Do you want to stop getting updates about {{tag}}?",
+      "Do you want to stop getting updates from {{news_source}}?"
+    ],
+    "list_preferences": [
+      "Currently, you can subscribe to news posts by source and tags. Here's our list of news sources: {{list_of_news_sources}}. Here's our list of tags: {{list_of_tags}}."
+    ],
+    "current_preferences": [
+      "Sources: {{list_of_news_sources}}. Tags: {{list_of_tags}}."
+    ]
 }
   

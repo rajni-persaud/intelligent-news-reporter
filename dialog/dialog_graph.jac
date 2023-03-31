@@ -238,6 +238,18 @@ node entity_search:dialog_state {
     }
 }
 
+node add_preferences:dialog_state {
+    has name = "add_preferences";
+
+    can process {
+        visitor.next_state = (net.root()).info["jid"];
+    }
+
+    can nlg {
+        ::set_state_response;
+    }
+}
+
 node dialog_end:dialog_state {
     has name = "dialog_end";
     //the talker walker disengages when it gets here

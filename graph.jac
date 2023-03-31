@@ -18,6 +18,8 @@ graph app_graph {
         // faqs = spawn dialog_root +[intent_transition(intent= "faqs")]+> node::faqs;
         semantic_search = spawn dialog_root +[intent_transition(intent = "semantic_search")]+> node::semantic_search;
         entity_search = spawn dialog_root +[intent_transition(intent = "entity_search")]+> node::entity_search;
+        list_preferences = spawn dialog_root +[intent_transition(intent = "list_preferences")]+> node::list_preferences;
+        add_preferences = spawn dialog_root +[intent_transition(intent = "add_preferences")]+> node::add_preferences;
     }
 
 }
