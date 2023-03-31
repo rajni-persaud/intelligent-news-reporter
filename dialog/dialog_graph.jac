@@ -248,6 +248,10 @@ node add_preferences:dialog_state {
     can nlg {
         ::set_state_response;
     }
+
+    can nlu {
+        ::extract_entities;
+    }
 }
 
 node dialog_end:dialog_state {

@@ -1,4 +1,4 @@
-global entity_list = './data/entity_list.json';
+global entity_config = './data/entity_config.json';
 global intent_data = './data/intent_data.json';
 global state_responses = './data/state_responses.json';
 global min_ner_confidence = 0.2;

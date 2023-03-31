@@ -1,5 +1,10 @@
-.session
+js.session
 mydatabase
-.jir
+main.jir
 .dot
 ai/models/*/
+results/
+train/
+__pycache__
+/.jaseci_logs
+/.vscode
