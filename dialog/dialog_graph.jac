@@ -99,14 +99,6 @@ node dialog_state {
                         entity_label = entity["entity_value"];
                         entity_text = entity["entity_text"];
                         entity_confidence = entity["conf_score"];
-
-                        //perform entity text replacements
-                        if(entity_text in (entity_config["replace"]).dict::keys): entity_text = entity_config["replace"][entity_text];
-                        if("convert" in entity_config) {
-                            for text in (entity_config["convert"]).dict::keys {
-                                entity_text = utils.replace_word(entity_text, text, entity_config["convert"][text]);
-                            }
-                        }
                                                 
                         if(entity_label in entity_config["labels"]) { 
                             //only consider valid entities based on entity_config.json
