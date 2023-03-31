@@ -12,7 +12,11 @@ walker talker {
     has next_state;
     has resumed = false;
     has verbose = false;
-    has _context = {};
+    has _context = {
+        "tags": [],
+        "news_source": [],
+        "timestamp": []
+    };
     has _debug = {
         "transcript": [],
         "trail": []
@@ -39,6 +43,7 @@ walker talker {
         
         if(utterance): here::nlu;
         here::process;
+        if(here.name == "add_preferences"): here::set_preferences;
         here::nlg;
         here::resume; //resume from previous walk
         

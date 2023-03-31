@@ -48,7 +48,69 @@ def get_cluster_list(item: str, clusters: dict):
     else:
         raise Exception("'{item}' not found in list {list}".format(item=item, list=list(clusters.keys())))
     
-#replaces all occurrences of old_word with new_word in text
-@jaseci_action(act_group=["utils"], allow_remote=True)
-def replace_word(text, old_word, new_word):
-    return re.sub(r'\b{}\b'.format(old_word), new_word, text)
+@jaseci_action(act_group=["utils"], allow_remote=True)    
+def list_to_phrase(lst):
+    """
+    Formats a list as a phrased list, e.g. ['one', 'two', 'three'] becomes 'one, two and three'.
+    """
+    if len(lst) == 0:
+        return ''
+    elif len(lst) == 1:
+        return lst[0]
+    elif len(lst) == 2:
+        return lst[0] + ' and ' + lst[1]
+    else:
+        return ', '.join(lst[:-1]) + ' and ' + lst[-1]
+
+
+@jaseci_action(act_group=["utils"], allow_remote=True)  
+def replace_placeholders(string_or_collection, placeholders):
+    """
+    Replaces placeholders delimited by {{ and }} in a string or collection of strings with their corresponding values
+    from a dictionary of key-value pairs. If a value in the dictionary is a list, it is formatted as a phrased list.
+    Returns only items that have no remaining placeholders.
+    Parameters:
+    string_or_collection (str or list): A string or collection of strings containing placeholders delimited by {{ and }}.
+    placeholders (dict): A dictionary of key-value pairs where the keys correspond to the placeholder names inside the {{ and }}
+                          and the values will replace the entire placeholder in the string or collection of strings. If a
+                          value in the dictionary is a list, it will be formatted as a phrased list.
+    Returns:
+    str or list: The input string or collection of strings with the placeholders replaced by their corresponding values.
+                 Returns only items that have no remaining placeholders.
+    """
+
+    if isinstance(string_or_collection, str):
+        # If the input is a string, replace placeholders in that string.
+        replaced_string = string_or_collection
+        for key, value in placeholders.items():
+            if isinstance(value, list):
+                value = list_to_phrase(value)
+            replaced_string = replaced_string.replace('{{' + key + '}}', str(value))
+        if '{{' in replaced_string or '}}' in replaced_string:
+            # Return None if the replaced string still contains placeholders.
+            return None
+        else:
+            # Return the replaced string if it has no remaining placeholders.
+            return replaced_string
+
+    elif isinstance(string_or_collection, list):
+        # If the input is a list, replace placeholders in each string in the list.
+        replaced_strings = []
+        for string in string_or_collection:
+            replaced_string = string
+            for key, value in placeholders.items():
+                if isinstance(value, list):
+                    value = list_to_phrase(value)
+                replaced_string = replaced_string.replace('{{' + key + '}}', str(value))
+            if '{{' not in replaced_string and '}}' not in replaced_string:
+                # Append the replaced string if it has no remaining placeholders.
+                replaced_strings.append(replaced_string)
+        if len(replaced_strings) > 0:
+            # Return the list of replaced strings if there are any that have no remaining placeholders.
+            return replaced_strings
+        else:
+            # Return None if none of the strings in the list have no remaining placeholders.
+            return None
+
+    else:
+        raise TypeError('Input must be a string or a list of strings.')

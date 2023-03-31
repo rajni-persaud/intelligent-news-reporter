@@ -41,7 +41,8 @@
     "add_preferences": [
       "Do you want to start getting updates about {{tag}}?",
       "Do you want to start getting updates from {{news_source}}?",
-      "Do you want to start receiving updates about {{tag}} from {{news_source}}?"
+      "Do you want to start receiving updates about {{tag}} from {{news_source}}?",
+      "Are you sure?"
     ],
     "update_preferences": [
       "Do you want to stop getting updates about {{tag}}?",

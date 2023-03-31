@@ -237,12 +237,31 @@ node add_preferences:dialog_state {
         visitor.next_state = (net.root()).info["jid"];
     }
 
-    can nlg {
-        ::set_state_response;
-    }
-
     can nlu {
         ::extract_entities;
+    }
+
+    can set_preferences {
+        if ("news_source" in entities.dict::keys) {
+            for extracted_source in entities["news_source"] {
+                std.log("extracted news source: "+extracted_source["text"]);
+                if(extracted_source["text"] in _context["news_source"]): std.log("already subscribed to news source: "+extracted_source["text"]);
+                else: _context["news_source"].list::append(extracted_source["text"]);
+            }
+        }
+
+        if ("tag" in entities.dict::keys) {
+            for extracted_tag in entities["tag"] {
+                std.log("extracted tag: "+extracted_tag["text"]);
+                if(extracted_tag["text"] in _context["tags"]): std.log("already subscribed to tag: "+extracted_tag["text"]);
+                else: _context["tags"].list::append(extracted_tag["text"]);
+            }
+        }
+    }
+    can nlg {
+        ::set_state_response;
+        // response_list = utils.replace_placeholders(state_responses["add_preferences"], entity_data.dict::keys);
+        // payload["response"] = rand.choice(response_list);
     }
 }
 
