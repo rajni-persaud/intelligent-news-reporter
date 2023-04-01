@@ -241,16 +241,16 @@ node add_preferences:dialog_state {
     }
 
     can set_preferences {
-        if ("news_source" in entities.dict::keys) {
-            for extracted_source in entities["news_source"] {
+        if ("news_source" in entity_data.dict::keys) {
+            for extracted_source in entity_data["news_source"] {
                 std.log("extracted news source: "+extracted_source["text"]);
                 if(extracted_source["text"] in _context["news_source"]): std.log("already subscribed to news source: "+extracted_source["text"]);
                 else: _context["news_source"].list::append(extracted_source["text"]);
             }
         }
 
-        if ("tag" in entities.dict::keys) {
-            for extracted_tag in entities["tag"] {
+        if ("tag" in entity_data.dict::keys) {
+            for extracted_tag in entity_data["tag"] {
                 std.log("extracted tag: "+extracted_tag["text"]);
                 if(extracted_tag["text"] in _context["tags"]): std.log("already subscribed to tag: "+extracted_tag["text"]);
                 else: _context["tags"].list::append(extracted_tag["text"]);
