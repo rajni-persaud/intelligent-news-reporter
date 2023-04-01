@@ -3,7 +3,6 @@ node dialog_state {
     can use.text_classify;
     can tfm_ner.extract_entity;
     can sentiment.predict;
-    can utils.replace_word;
 
     has name;
 
