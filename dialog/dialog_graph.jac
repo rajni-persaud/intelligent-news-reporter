@@ -231,6 +231,7 @@ node entity_search:dialog_state {
 
 node add_preferences:dialog_state {
     has name = "add_preferences";
+    can utils.replace_placeholders;
 
     can process {
         visitor.next_state = (net.root()).info["jid"];
@@ -258,9 +259,22 @@ node add_preferences:dialog_state {
         }
     }
     can nlg {
-        ::set_state_response;
-        // response_list = utils.replace_placeholders(state_responses["add_preferences"], entity_data.dict::keys);
-        // payload["response"] = rand.choice(response_list);
+        placeholders = {};
+        for entity in visitor.entity_data.dict::keys{
+            if (entity in placeholders.dict::keys) {
+                for data in visitor.entity_data[entity] {
+                    placeholders[entity].list::append(data["text"]);
+                }
+            }
+            else {
+                placeholders[entity] = [];
+                for data in visitor.entity_data[entity] {
+                    placeholders[entity].list::append(data["text"]);
+                }
+            }
+        }
+        // response_list = utils.replace_placeholders(state_responses["add_preferences"], placeholders);
+        // visitor.response = rand.choice(response_list);
     }
 }
 
