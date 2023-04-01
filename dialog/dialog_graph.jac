@@ -242,39 +242,41 @@ node add_preferences:dialog_state {
     }
 
     can set_preferences {
-        if ("news_source" in visitor.entity_data.dict::keys) {
-            for extracted_source in visitor.entity_data["news_source"] {
-                std.log("extracted news source: "+extracted_source["text"]);
-                if(extracted_source["text"] in visitor._context["news_source"]): std.log("already subscribed to news source: "+extracted_source["text"]);
-                else: visitor._context["news_source"].list::append(extracted_source["text"]);
-            }
-        }
+        // if ("news_source" in visitor.entity_data.dict::keys) {
+        //     for extracted_source in visitor.entity_data["news_source"] {
+        //         std.log("extracted news source: "+extracted_source["text"]);
+        //         if(extracted_source["text"] in visitor._context["news_source"]): std.log("already subscribed to news source: "+extracted_source["text"]);
+        //         else: visitor._context["news_source"].list::append(extracted_source["text"]);
+        //     }
+        // }
 
-        if ("tag" in visitor.entity_data.dict::keys) {
-            for extracted_tag in visitor.entity_data["tag"] {
-                std.log("extracted tag: "+extracted_tag["text"]);
-                if(extracted_tag["text"] in visitor._context["tags"]): std.log("already subscribed to tag: "+extracted_tag["text"]);
-                else: visitor._context["tags"].list::append(extracted_tag["text"]);
+        // if ("tag" in visitor.entity_data.dict::keys) {
+        //     for extracted_tag in visitor.entity_data["tag"] {
+        //         std.log("extracted tag: "+extracted_tag["text"]);
+        //         if(extracted_tag["text"] in visitor._context["tags"]): std.log("already subscribed to tag: "+extracted_tag["text"]);
+        //         else: visitor._context["tags"].list::append(extracted_tag["text"]);
+        //     }
+        // }
+
+        for entity in visitor.entity_data.dict::keys{
+            if(entity in ["tag", "news_source"]){
+                // if entity not in _context; add it
+                if (!(entity in visitor._context.dict::keys)): visitor._context[entity] = [];
+                for _data in visitor.entity_data[entity]{
+                    if(_data["text"] in visitor._context[entity]): std.log("already subscribed to "+entity+": "+_data["text"]);
+                    else: visitor._context[entity].list::append(_data["text"]);
+                }
             }
         }
     }
     can nlg {
-        placeholders = {};
-        for entity in visitor.entity_data.dict::keys{
-            if (entity in placeholders.dict::keys) {
-                for data in visitor.entity_data[entity] {
-                    placeholders[entity].list::append(data["text"]);
-                }
-            }
-            else {
-                placeholders[entity] = [];
-                for data in visitor.entity_data[entity] {
-                    placeholders[entity].list::append(data["text"]);
-                }
-            }
+        try {
+            state_responses = file.load_json(global.state_responses);
+            response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor._context);
+            visitor.response = rand.choice(response_list);
+        } else {
+            std.log("Could not load state responses.");
         }
-        // response_list = utils.replace_placeholders(state_responses["add_preferences"], placeholders);
-        // visitor.response = rand.choice(response_list);
     }
 }
 
