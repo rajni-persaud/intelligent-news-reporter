@@ -272,7 +272,7 @@ node add_preferences:dialog_state {
     can nlg {
         try {
             state_responses = file.load_json(global.state_responses);
-            response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor._context);
+            response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor.preferences);
             visitor.response = rand.choice(response_list);
         } else {
             std.log("Could not load state responses.");
@@ -297,17 +297,17 @@ node confirm_preferences {
                 else: visitor._context[entity].list::append(_data);
             }
         }
-        visitor.preferences = {};
     }
 
     can nlg {
         try {
             state_responses = file.load_json(global.state_responses);
-            response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor._context);
+            response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor.preferences);
             visitor.response = rand.choice(response_list);
         } else {
             std.log("Could not load state responses.");
         }
+        visitor.preferences = {};
     }
 }
 
