@@ -233,13 +233,14 @@ node add_preferences:dialog_state {
     has name = "add_preferences";
     can utils.replace_placeholders;
 
-    can process {
-        visitor.next_state = (net.root()).info["jid"];
-    }
-
     can nlu {
+        ::classify_intent;
         ::extract_entities;
     }
+
+    can process {
+        visitor.next_state = (net.root()).info["jid"];
+    }   
 
     can set_preferences {
         // if ("news_source" in visitor.entity_data.dict::keys) {
@@ -283,9 +284,9 @@ node add_preferences:dialog_state {
 node confirm_preferences {
     has name = "confirm_preferences";
     can utils.replace_placeholders;
-
+    
     can process {
-        visitor.next_state = here.info["jid"]
+        visitor.next_state = (net.root()).info["jid"];
     }
 
     can update_context {

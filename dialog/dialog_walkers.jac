@@ -50,6 +50,7 @@ walker talker {
             if(verbose) {
                 payload = {
                     "session_id": session_id,
+                    "name": here.name,
                     "utterance": utterance,
                     "intent": intent,
                     "sentiment": sentiment,
