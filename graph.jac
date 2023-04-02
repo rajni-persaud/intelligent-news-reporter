@@ -20,6 +20,9 @@ graph app_graph {
         entity_search = spawn dialog_root +[intent_transition(intent = "entity_search")]+> node::entity_search;
         // list_preferences = spawn dialog_root +[intent_transition(intent = "list_preferences")]+> node::list_preferences;
         add_preferences = spawn dialog_root +[intent_transition(intent = "add_preferences")]+> node::add_preferences;
+        // update_preferences = spawn dialog_root +[intent_transition(intent = "update_preferences")]+> node::update_preferences;
+        confirm_add_preferences = spawn add_preferences +[intent_transition(intent = "positive_confirmation")]+> node::confirm_preferences;
+        // confirm_update_preferences = spawn update_preferences +[intent_transition(intent = "positive_confirmation")]+> node::confirm_preferences;
     }
 
 }

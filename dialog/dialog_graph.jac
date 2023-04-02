@@ -261,10 +261,10 @@ node add_preferences:dialog_state {
         for entity in visitor.entity_data.dict::keys{
             if(entity in ["tag", "news_source"]){
                 // if entity not in _context; add it
-                if (!(entity in visitor._context.dict::keys)): visitor._context[entity] = [];
+                if (!(entity in visitor.preferences.dict::keys)): visitor.preferences[entity] = [];
                 for _data in visitor.entity_data[entity]{
-                    if(_data["text"] in visitor._context[entity]): std.log("already subscribed to "+entity+": "+_data["text"]);
-                    else: visitor._context[entity].list::append(_data["text"]);
+                    if(_data["text"] in visitor.preferences[entity]): std.log("already subscribed to "+entity+": "+_data["text"]);
+                    else: visitor.preferences[entity].list::append(_data["text"]);
                 }
             }
         }
@@ -272,8 +272,38 @@ node add_preferences:dialog_state {
     can nlg {
         try {
             state_responses = file.load_json(global.state_responses);
-            if(visitor.predicted_intent == "add_preferences"): response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor._context);
-            if(visitor.predicted_intent == "positive_confirmation"): response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor._context);
+            response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor._context);
+            visitor.response = rand.choice(response_list);
+        } else {
+            std.log("Could not load state responses.");
+        }
+    }
+}
+
+node confirm_preferences {
+    has name = "confirm_preferences";
+    can utils.replace_placeholders;
+
+    can process {
+        visitor.next_state = (net.root()).info["jid"];
+    }
+
+    can update_context {
+        for entity in visitor.preferences.dict::keys{
+            // if entity not in _context; add it
+            if (!(entity in visitor._context.dict::keys)): visitor._context[entity] = [];
+            for _data in visitor.preferences[entity]{
+                if(_data in visitor._context[entity]): continue;
+                else: visitor._context[entity].list::append(_data);
+            }
+        }
+        visitor.preferences = {};
+    }
+
+    can nlg {
+        try {
+            state_responses = file.load_json(global.state_responses);
+            response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor._context);
             visitor.response = rand.choice(response_list);
         } else {
             std.log("Could not load state responses.");
