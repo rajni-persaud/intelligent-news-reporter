@@ -272,7 +272,8 @@ node add_preferences:dialog_state {
     can nlg {
         try {
             state_responses = file.load_json(global.state_responses);
-            response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor._context);
+            if(visitor.predicted_intent == "add_preferences"): response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor._context);
+            if(visitor.predicted_intent == "positive_confirmation"): response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor._context);
             visitor.response = rand.choice(response_list);
         } else {
             std.log("Could not load state responses.");
