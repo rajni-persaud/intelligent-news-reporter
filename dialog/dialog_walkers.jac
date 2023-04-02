@@ -57,6 +57,7 @@ walker talker {
                     "context": _context,
                     "next_state": next_state,
                     "prev_state": prev_state,
+                    "preferences": preferences,
                     "debug": _debug,
                     "response": response
                 };

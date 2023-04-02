@@ -285,7 +285,7 @@ node confirm_preferences {
     can utils.replace_placeholders;
 
     can process {
-        visitor.next_state = (net.root()).info["jid"];
+        visitor.next_state = here.info["jid"]
     }
 
     can update_context {
