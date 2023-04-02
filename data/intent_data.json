@@ -95,5 +95,28 @@
     "What are my current news preferences in terms of news sources and tags?",
     "Is there a way for me to review my current news preferences?",
     "Can you help me update my news preferences by reviewing my current selections?"
+  ],
+  "positive_confirmation": [
+    "Correct.",
+    "That's right.",
+    "Yes.",
+    "Affirmative.",
+    "Indeed.",
+    "Absolutely.",
+    "Got it.",
+    "Exactly.",
+    "You're right.",
+    "That's it."
+  ],
+  "negative_confirmation": [
+    "No.",
+    "Wrong.",
+    "Sorry.",
+    "Incorrect.",
+    "Nope.",
+    "Not quite.",
+    "Try again.",
+    "My mistake.",
+    "Not quite right."
   ]
 }
