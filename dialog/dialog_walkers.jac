@@ -13,6 +13,7 @@ walker talker {
     has resumed = false;
     has verbose = false;
     has _context = {};
+    has preferences = {};
     has _debug = {
         "transcript": [],
         "trail": []

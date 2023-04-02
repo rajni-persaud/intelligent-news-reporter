@@ -41,12 +41,20 @@
     "add_preferences": [
       "Do you want to start getting updates about {{tag}}?",
       "Do you want to start getting updates from {{news_source}}?",
-      "Do you want to start receiving updates about {{tag}} from {{news_source}}?",
-      "Are you sure?"
+      "Do you want to start receiving updates about {{tag}} from {{news_source}}?"
     ],
     "update_preferences": [
       "Do you want to stop getting updates about {{tag}}?",
       "Do you want to stop getting updates from {{news_source}}?"
+    ],
+    "confirm_add_preferences": [
+      "You'll start getting updates about {{tag}}?",
+      "You'll start getting updates from {{news_source}}?",
+      "You'll start receiving updates about {{tag}} from {{news_source}}?"
+    ],
+    "confirm_update_preferences": [
+      "You'll stop receiving updates about {{tag}}?",
+      "You'll stop receiving updates from {{news_source}}?"
     ],
     "list_preferences": [
       "Currently, you can subscribe to news posts by source and tags. Here's our list of news sources: {{list_of_news_sources}}. Here's our list of tags: {{list_of_tags}}."
