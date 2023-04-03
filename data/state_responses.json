@@ -48,9 +48,9 @@
       "Do you want to stop getting updates from {{news_source}}?"
     ],
     "confirm_add_preferences": [
-      "You'll start getting updates about {{tag}}?",
-      "You'll start getting updates from {{news_source}}?",
-      "You'll start receiving updates about {{tag}} from {{news_source}}?"
+      "You'll start getting updates about {{tag}}.",
+      "You'll start getting updates from {{news_source}}.",
+      "You'll start receiving updates about {{tag}} from {{news_source}}."
     ],
     "confirm_update_preferences": [
       "You'll stop receiving updates about {{tag}}?",

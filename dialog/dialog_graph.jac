@@ -232,6 +232,7 @@ node entity_search:dialog_state {
 node add_preferences:dialog_state {
     has name = "add_preferences";
     can utils.replace_placeholders;
+    has next_node;
 
     can nlu {
         ::classify_intent;
@@ -239,7 +240,12 @@ node add_preferences:dialog_state {
     }
 
     can process {
-        visitor.next_state = (net.root()).info["jid"];
+        next_node = (-[intent_transition(intent==visitor.intent)]-> node::dialog_state);
+        if(next_node) {
+            visitor.response = null;
+            visitor.next_state = next_node[0].info["jid"];
+        }
+        else: visitor.next_state = here.info["jid"];
     }   
 
     can set_preferences {
@@ -271,22 +277,28 @@ node add_preferences:dialog_state {
         }
     }
     can nlg {
-        try {
-            state_responses = file.load_json(global.state_responses);
-            response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor.preferences);
-            visitor.response = rand.choice(response_list);
-        } else {
-            std.log("Could not load state responses.");
+        if (!next_node){
+            try {
+                state_responses = file.load_json(global.state_responses);
+                response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor.preferences);
+                visitor.response = rand.choice(response_list);
+            } else {
+                std.log("Could not load state responses2.");
+            }
         }
     }
 }
 
-node confirm_preferences {
+node confirm_preferences:dialog_state{
     has name = "confirm_preferences";
     can utils.replace_placeholders;
     
     can process {
-        visitor.next_state = (net.root()).info["jid"];
+        next_node = (-[intent_transition(intent==visitor.intent)]-> node::dialog_state);
+        if(next_node) {
+            visitor.next_state = next_node[0].info["jid"];
+        }
+        else: visitor.next_state = (net.root()).info["jid"];
     }
 
     can update_context {
@@ -301,12 +313,13 @@ node confirm_preferences {
     }
 
     can nlg {
+        
         try {
             state_responses = file.load_json(global.state_responses);
             response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor.preferences);
             visitor.response = rand.choice(response_list);
         } else {
-            std.log("Could not load state responses.");
+            std.log("Could not load state responses1.");
         }
         visitor.preferences = {};
     }
