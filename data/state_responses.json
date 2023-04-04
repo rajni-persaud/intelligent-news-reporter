@@ -53,8 +53,8 @@
       "You'll start receiving updates about {{tag}} from {{news_source}}."
     ],
     "confirm_update_preferences": [
-      "You'll stop receiving updates about {{tag}}?",
-      "You'll stop receiving updates from {{news_source}}?"
+      "You'll stop receiving updates about {{tag}}.",
+      "You'll stop receiving updates from {{news_source}}."
     ],
     "list_preferences": [
       "Currently, you can subscribe to news posts by source and tags. Here's our list of news sources: {{list_of_news_sources}}. Here's our list of tags: {{list_of_tags}}."

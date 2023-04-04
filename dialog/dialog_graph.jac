@@ -283,7 +283,52 @@ node add_preferences:dialog_state {
                 response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor.preferences);
                 visitor.response = rand.choice(response_list);
             } else {
-                std.log("Could not load state responses2.");
+                std.log("Could not load state responses.");
+            }
+        }
+    }
+}
+
+node update_preferences:dialog_state {
+    has name = "update_preferences";
+    can utils.replace_placeholders;
+    has next_node;
+
+    can nlu {
+        ::classify_intent;
+        ::extract_entities;
+    }
+
+    can process {
+        next_node = (-[intent_transition(intent==visitor.intent)]-> node::dialog_state);
+        if(next_node) {
+            visitor.response = null;
+            visitor.next_state = next_node[0].info["jid"];
+        }
+        else: visitor.next_state = here.info["jid"];
+    }   
+
+    can set_preferences {
+
+        for entity in visitor.entity_data.dict::keys{
+            if(entity in ["tag", "news_source"]){
+                // if entity not in _context; add it
+                if (!(entity in visitor.preferences.dict::keys)): visitor.preferences[entity] = [];
+                for _data in visitor.entity_data[entity]{
+                    if(_data["text"] in visitor.preferences[entity]): continue;
+                    else: visitor.preferences[entity].list::append(_data["text"]);
+                }
+            }
+        }
+    }
+    can nlg {
+        if (!next_node){
+            try {
+                state_responses = file.load_json(global.state_responses);
+                response_list = utils.replace_placeholders(string_or_collection=state_responses["update_preferences"], placeholders=visitor.preferences);
+                visitor.response = rand.choice(response_list);
+            } else {
+                std.log("Could not load state responses.");
             }
         }
     }
@@ -302,13 +347,24 @@ node confirm_preferences:dialog_state{
     }
 
     can update_context {
-        for entity in visitor.preferences.dict::keys{
-            // if entity not in _context; add it
-            if (!(entity in visitor._context.dict::keys)): visitor._context[entity] = [];
-            for _data in visitor.preferences[entity]{
-                if(_data in visitor._context[entity]): continue;
-                else: visitor._context[entity].list::append(_data);
+        if (visitor._debug["trail"][-1] == "add_preferences") {
+            for entity in visitor.preferences.dict::keys{
+                // if entity not in _context; add it
+                if (!(entity in visitor._context.dict::keys)): visitor._context[entity] = [];
+                for _data in visitor.preferences[entity]{
+                    if(_data in visitor._context[entity]): continue;
+                    else: visitor._context[entity].list::append(_data);
+                }
+            }       
+        }
+        else {
+            for entity in visitor.preferences.dict::keys{
+                for _data in visitor.preferences[entity]{
+                    if(_data in visitor._context[entity]): 
+                    visitor._context[entity].list::remove(_data);
+                }
             }
+            visitor._context["remove"]: true;
         }
     }
 
@@ -319,7 +375,7 @@ node confirm_preferences:dialog_state{
             response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor.preferences);
             visitor.response = rand.choice(response_list);
         } else {
-            std.log("Could not load state responses1.");
+            std.log("Could not load state responses.");
         }
         visitor.preferences = {};
     }
