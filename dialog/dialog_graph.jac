@@ -364,7 +364,6 @@ node confirm_preferences:dialog_state{
                     visitor._context[entity].list::remove(_data);
                 }
             }
-            visitor._context["remove"] = true;
         }
     }
 
@@ -372,7 +371,8 @@ node confirm_preferences:dialog_state{
         
         try {
             state_responses = file.load_json(global.state_responses);
-            response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor.preferences);
+            if (visitor._debug["trail"][-1] == "add_preferences"): response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor.preferences);
+            else: response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_update_preferences"], placeholders=visitor.preferences);
             visitor.response = rand.choice(response_list);
         } else {
             std.log("Could not load state responses.");

@@ -40,7 +40,7 @@ walker talker {
         
         if(utterance): here::nlu;
         here::process;
-        if(here.name == "add_preferences"): here::set_preferences;
+        if(here.name == "add_preferences" || here.name == "update_preferences"): here::set_preferences;
         if(here.name == "confirm_preferences"): here::update_context;
         here::nlg;
         here::resume; //resume from previous walk
