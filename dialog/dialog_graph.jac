@@ -364,7 +364,7 @@ node confirm_preferences:dialog_state{
                     visitor._context[entity].list::remove(_data);
                 }
             }
-            visitor._context["remove"]: true;
+            visitor._context["remove"] = true;
         }
     }
 
