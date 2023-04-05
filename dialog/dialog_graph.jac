@@ -382,6 +382,29 @@ node confirm_preferences:dialog_state{
     }
 }
 
+node current_preferences:dialog_state {
+    has name = "current_preferences";
+    can utils.replace_placeholders;
+
+    can nlu {
+        ::classify_intent;
+    }
+
+    can process {
+        visitor.next_state = (net.root()).info["jid"];
+    }   
+
+    can nlg {
+        try {
+            state_responses = file.load_json(global.state_responses);
+            response_list = utils.replace_placeholders(string_or_collection=state_responses["current_preferences"], placeholders=visitor._context);
+            visitor.response = rand.choice(response_list);
+        } else {
+            std.log("Could not load state responses.");
+        }
+    }
+}
+
 node dialog_end:dialog_state {
     has name = "dialog_end";
     //the talker walker disengages when it gets here
