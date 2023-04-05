@@ -186,34 +186,44 @@ walker tag_posts {
 
 // takes a post and applies the best tags to it
 walker apply_tags {
+
     can use.text_classify;
-    has min_confidence = 0.15;
+    has min_confidence = 0.1;
     has _post;
+
     root: take --> node::app_root;
     app_root: take --> node::tags;
+
     post {
         _post = here;
         std.log("grabbed post node: " + _post.title);
         take net.root(); //head back to root
     }
+
     tags {
         take --> node::tag;
     }
+
     tag {
         std.log("examining tag: " + here.label);
+
         result = use.text_classify(
-            text = _post.summary,
-            classes = -[tag_statement]->.text //pluck text value from nodes connected by tag_statement edges as list
+            text = _post.title,
+            classes = -[tag_statement]->.text // pluck text value from nodes connected by tag_statement edges as list
         );
-        //grab index of match with highest score
-        match_index = result['match_idx'];
-        //grab the score
-        confidence = result['scores'][match_index];
-        //if it makes our acceptable confidence level, we consider it
+
+        // grab index of match with highest score
+        match_index = result["match_idx"];
+        // grab the score
+        confidence = result["scores"][match_index];
+
+        // if it makes our acceptance confidence level, we consider it
         if (confidence >= min_confidence) {
+
             //establish the edge, if it doesnt exist
             if( _post in <-[tag_post]-> ): std.log("already added tag: " + here.label);
             else: _post <+[tag_post(confidence = confidence)]+> here;
+
         } else {
             std.log("confidence too low, skipping");
         }
@@ -227,7 +237,7 @@ walker semantic_search {
 
     can use.qa_similarity;
 
-    root: take -->[0];
+    root: take --> node::app_root;
     app_root: take --> node::posts;
 
     posts {
@@ -251,9 +261,9 @@ walker semantic_search {
 }
 
 // extract entities from query inputted by user
-walker query_entities {
+walker entity_search {
     has utterance;
-    has anchor entities = {};
+    has entities = {};
 
     can extract_entities {
         
@@ -298,17 +308,70 @@ walker query_entities {
 
     }
 
+    // extract entities then we filter posts and report
     ::extract_entities;
+    report spawn net.root() walker::filter_posts_by_entities(entities = entities);
+}
+
+walker filter_posts_by_entities {
+    has entities;
+    has anchor _posts = [];
+
+    has min_confidence = 0.15;
+    can use.qa_similarity;
+
+    if(entities) {
+        root: take -->[0];
+        app_root {
+            // if tag is extracted, go to tags node; else go to posts node
+            if ("tag" in entities.dict::keys): take --> node::tags;
+            else: take --> node::posts;
+        }
+
+        tags {  // while on tags node...
+            tag_labels = -->.label;
+            for extracted_tag in entities["tag"] {
+                std.log("extracted tag: "+extracted_tag["text"]);
+                // if extracted tag matches the label of any tag then go to that tag node
+                if (extracted_tag["text"] in tag_labels){
+                    take --> node::tag(label == extracted_tag["text"]);
+                }
+                // else spawan walker to get a similar tag
+                else {
+                    std.log("looking for a similar tag related to: "+extracted_tag["text"]);
+                    similar_tag = spawn here walker::get_similar_tag(extracted_tag=extracted_tag["text"], entities=entities);
+                    if(similar_tag) {
+                        std.log("found similar tag: "+ similar_tag +" to:"+ extracted_tag["text"]);
+                        take --> node::tag(label == similar_tag);
+                    }
+                }
+            }
+            
+        }
+
+        posts {
+            take --> node::post;
+        }
+
+        tag { // while on tag node go to every post connected to this tag
+            std.log("getting posts connected to "+here.label+" tag node");
+            take <-[tag_post]-> node::post;
+        }
+
+        post {
+            // if we're here, we've found a narrowed-down post, let's add it
+            _posts += spawn here walker::apply_post_filter(entities=entities);
+        }
+    }
 }
 
 // gets a similar tag related to the extracted tag
 walker get_similar_tag {
     has extracted_tag;
     has entities;
-
     has anchor similar_tag;
 
-    max_score = 0;
+    min_score = 0.15;
 
     take --> node::tag;
 
@@ -317,106 +380,59 @@ walker get_similar_tag {
 
         cos_score = use.qa_similarity(text1 = here.label, text2 = extracted_tag);
 
-        if (cos_score > max_score) {
-            max_score = cos_score;
+        if (cos_score >= min_score) {
             similar_tag = here.label;
         }
-    }
-}
-
-walker apply_tag_filter {
-    has query;
-    has entities;
-
-    has min_confidence = 0.15;
-    can use.qa_similarity;
-
-    if (query): entities = spawn here walker::query_entities(utterance=query);
-
-    root: take -->[0];
-    app_root {
-        // if tag is extracted, go to tags node; else go to posts node
-        if ("tag" in entities.dict::keys): take --> node::tags;
-        else: take --> node::posts;
-    }
-
-    tags {  // while on tags node...
-        tag_labels = -->.label;
-        for extracted_tag in entities["tag"] {
-            std.log("extracted tag: "+extracted_tag["text"]);
-            // if extracted tag matches the label of any tag then go to that tag node
-            if (extracted_tag["text"] in tag_labels){
-                take --> node::tag(label == extracted_tag["text"]);
-            }
-            // else spawan walker to get a similar tag
-            else {
-                std.log("looking for a similar tag related to: "+extracted_tag["text"]);
-                similar_tag = spawn here walker::get_similar_tag(extracted_tag=extracted_tag["text"], entities=entities);
-                std.log("found similar tag: "+ similar_tag);
-                take --> node::tag(label == similar_tag);
-            }
-        }
-        
-    }
-
-    posts {
-        take --> node::post;
-    }
-
-    tag { // while on tag node go to every post connected to this tag
-        std.log("getting posts connected to "+here.label+" tag node");
-        take <-[tag_post]-> node::post;
-    }
-
-    post {
-        spawn here walker::apply_post_filter(entities=entities);
     }
 }
 
 walker apply_post_filter {
     can inr.phrase_to_date;
     has entities;
+    has anchor _posts = [];
 
     post {
 
-        entities_extracted = entities.dict::keys;
-        report entities;
+        entity_labels = entities.dict::keys;
 
         std.log("checking post: "+here.title);
 
         // checking for news source, timestamp_start, timestamp_end
-        if ("news_source" in entities_extracted && "timestamp_start" in entities_extracted && "timestamp_end" in entities_extracted) {
+        if ("news_source" in entity_labels and "timestamp_start" in entity_labels and "timestamp_end" in entity_labels) {
             start_date = inr.phrase_to_date(entities["timestamp_start"][0]["text"]);
             end_date = inr.phrase_to_date(entities["timestamp_end"][0]["text"]);
-            for extracted_source in entities["news_source"] {
-                if (extracted_source["text"] == (here.source).str::lower && (date.date_day_diff(start_date, here.published) >= 0) && (date.date_day_diff(here.published, end_date) >= 0)){
-                    report here;
+            for news_source in entities["news_source"] {
+                if (news_source["text"] == (here.source).str::lower
+                    and (date.date_day_diff(start_date, here.published) >= 0) 
+                    and (date.date_day_diff(here.published, end_date) >= 0)){
+                    _posts += [here];
                 }
             }
         }
         // checking for news source, timestamp
-        elif ("news_source" in entities_extracted && "timestamp" in entities_extracted) {
+        elif ("news_source" in entity_labels and "timestamp" in entity_labels) {
             date_published = inr.phrase_to_date(entities["timestamp"][0]["text"]);
-            for extracted_source in entities["news_source"] {
-                if (extracted_source["text"] == (here.source).str::lower && date_published in here.published){
-                    report here;
+            for news_source in entities["news_source"] {
+                if (news_source["text"] == (here.source).str::lower and date_published in here.published){
+                    _posts += [here];
                 }
             }
         }
         // checking for timestamp_start, timestamp_end
-        elif ("timestamp_start" in entities_extracted && "timestamp_end" in entities_extracted) {
+        elif ("timestamp_start" in entity_labels and "timestamp_end" in entity_labels) {
             start_date = inr.phrase_to_date(entities["timestamp_start"][0]["text"]);
             end_date = inr.phrase_to_date(entities["timestamp_end"][0]["text"]);
-            if ((date.date_day_diff(start_date, here.published) >= 0) && (date.date_day_diff(here.published, end_date) >= 0)){
-                report here;
+            if ( (date.date_day_diff(start_date, here.published) >= 0) 
+            and (date.date_day_diff(here.published, end_date) >= 0)){
+                _posts += [here];
             }
         }
         // checking for timestamp only
-        elif ("timestamp" in entities_extracted) {
+        elif ("timestamp" in entity_labels) {
             date_published = inr.phrase_to_date(entities["timestamp"][0]["text"]);
-            report date_published;
-            if (date_published in here.published){
-                report here;
+            std.log(date_published);
+            if ( (date.date_day_diff(date_published, here.published) >= 0)) {
+                _posts += [here];
             }
         }
         // checking for news_source only
@@ -424,12 +440,12 @@ walker apply_post_filter {
             for extracted_source in entities["news_source"] {
                 std.log("extracted news source: "+extracted_source["text"]);
                 if (extracted_source["text"] == (here.source).str::lower){
-                    report here;
+                    _posts += [here];
                 }
             }
         }
         else {
-            report here;
+            _posts += [here];
         }
     }
 }
@@ -598,7 +614,7 @@ walker intent_search {
         spawn here walker::semantic_search(query=query);
     }
     elif(intent == "entity_search") {
-        spawn here walker::apply_tag_filter(query=query);
+        spawn here walker::entity_search(query=query);
     }
     else {
         report intent;
