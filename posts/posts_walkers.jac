@@ -331,7 +331,7 @@ walker apply_tag_filter {
     has min_confidence = 0.15;
     can use.qa_similarity;
 
-    entities = spawn here walker::query_entities(utterance=query);
+    if (query): entities = spawn here walker::query_entities(utterance=query);
 
     root: take -->[0];
     app_root {

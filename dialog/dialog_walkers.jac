@@ -12,7 +12,7 @@ walker talker {
     has next_state;
     has resumed = false;
     has verbose = false;
-    has _context = {};
+    has anchor _context = {};
     has preferences = {};
     has _debug = {
         "transcript": [],
@@ -165,4 +165,8 @@ walker wipe_sessions {
     session {
         destroy here;
     }
+}
+
+walker generate_news_feed {
+    spawn here walker::apply_tag_filter(entities=entities);
 }
