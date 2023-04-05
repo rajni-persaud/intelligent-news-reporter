@@ -60,7 +60,8 @@
       "Currently, you can subscribe to news posts by source and tags. Here's our list of news sources: {{list_of_news_sources}}. Here's our list of tags: {{list_of_tags}}."
     ],
     "current_preferences": [
-      "Sources: {{list_of_news_sources}}. Tags: {{list_of_tags}}."
+      "Here's the list of tags you are currently subscribed to: {{tag}}.",
+      "Here's the list of news sources you are currently subscribed to: {{news_source}}."
     ]
 }
   
