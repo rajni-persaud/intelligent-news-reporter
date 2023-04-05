@@ -168,5 +168,9 @@ walker wipe_sessions {
 }
 
 walker generate_news_feed {
-    spawn here walker::apply_tag_filter(entities=entities);
+    has session_id;
+    has entities;
+    // has entities = spawn walker::talker(utterance= "news feed",session_id=session_id);
+    // report entities;
+    report spawn net.root() walker::filter_posts_by_entities(entities = entities);
 }

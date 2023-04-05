@@ -365,6 +365,7 @@ node confirm_preferences:dialog_state{
                 }
             }
         }
+        // spawn net.root() walker::filter_posts_by_entities(entities =  visitor._context);
     }
 
     can nlg {
