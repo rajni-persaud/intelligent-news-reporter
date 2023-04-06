@@ -268,13 +268,13 @@ walker entity_search {
     can extract_entities {
         
         try {
-            entity_list = file.load_json(global.entity_list);
+            entity_config = file.load_json(global.entity_config);
         } else {
             std.log("Could not load entity list.");
         }
 
-        if(entity_list) {
-            res = tfm_ner.extract_entity(utterance);
+        if(entity_config) {
+            res = tfm_ner.extract_entity(visitor.utterance);
 
             //prepare a standard way of organizing extracted entities inside of the walker
             //this can be modified if we swap out the NER without altering dependencies in the implementing app
@@ -284,9 +284,9 @@ walker entity_search {
                         entity_label = entity["entity_value"];
                         entity_text = entity["entity_text"];
                         entity_confidence = entity["conf_score"];
-                        
-                        if(entity_label in entity_list) { 
-                            //only consider valid entities based on entity_list.json
+                                                
+                        if(entity_label in entity_config["labels"]) { 
+                            //only consider valid entities based on entity_config.json
                             //update the collection of entities in the walker, 
                             //appending new entity_texts to existing entity_labels
                             if(entity_label not in entities) {
@@ -309,7 +309,7 @@ walker entity_search {
     }
 
     // extract entities then we filter posts and report
-    ::extract_entities;
+    if(utterance): ::extract_entities;
     report spawn net.root() walker::filter_posts_by_entities(entities = entities);
 }
 
