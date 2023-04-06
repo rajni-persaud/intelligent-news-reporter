@@ -429,7 +429,7 @@ node news_feed:dialog_state {
 
     can generate_news_feed {
         std.log("This is your news feed.");
-        report spawn net.root() walker::filter_posts_by_entities(entities = entities);
+        report spawn net.root() walker::filter_posts_by_entities(entities = entity_data);
     }   
 }
 
