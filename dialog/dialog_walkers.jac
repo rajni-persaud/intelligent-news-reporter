@@ -12,12 +12,13 @@ walker talker {
     has next_state;
     has resumed = false;
     has verbose = false;
-    has anchor _context = {};
+    has _context = {};
     has preferences = {};
     has _debug = {
         "transcript": [],
         "trail": []
     };
+    has memory_id = "";
 
     can clear_state {
         if(utterance): _debug["transcript"] += [{"utterance":utterance}];
@@ -60,13 +61,15 @@ walker talker {
                     "prev_state": prev_state,
                     "preferences": preferences,
                     "debug": _debug,
-                    "response": response
+                    "response": response,
+                    "memory_id": memory_id
                 };
             } else {
                 payload = {
                     "session_id": session_id,
                     "utterance": utterance,
-                    "response": response
+                    "response": response,
+                    "memory_id": memory_id
                 };
             }
             
@@ -169,8 +172,24 @@ walker wipe_sessions {
 
 walker generate_news_feed {
     has session_id;
-    has entities;
-    // has entities = spawn walker::talker(utterance= "news feed",session_id=session_id);
-    // report entities;
-    report spawn net.root() walker::filter_posts_by_entities(entities = entities);
+    has prev_state;
+    has next_state;
+    has _context;
+    has memory_id;
+
+    root: take --> node::app_root;
+    app_root : take --> node::dialog_root;
+    dialog_root : take --> node::news_feed;
+
+    dialog_state {
+        here::process;
+        
+        if(next_state) {
+            next_node = *(next_state);
+            take next_node;
+            prev_state = here.info["jid"];
+            next_state = null;
+        } 
+
+    }
 }
