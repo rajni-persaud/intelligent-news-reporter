@@ -408,20 +408,7 @@ node current_preferences:dialog_state {
 node news_feed:dialog_state {
     has name = "news_feed";
 
-    has entity_data = {
-        "tag": [
-          {
-            "text": "crime",
-            "confidence": 0.9580476880073547
-          }
-        ],
-        "timestamp": [
-          {
-            "text": "daily",
-            "confidence": 0.3815474212169647
-          }
-        ]
-    };
+    has entity_data;
 
     can process {
         visitor.next_state = (net.root()).info["jid"];
@@ -429,6 +416,15 @@ node news_feed:dialog_state {
 
     can generate_news_feed {
         std.log("This is your news feed.");
+        entity_data = {
+            "tag": [
+            {
+                "text": "crime",
+                "confidence": 0.9580476880073547
+            }
+            ]
+        };
+
         report spawn net.root() walker::filter_posts_by_entities(entities = entity_data);
     }   
 }
