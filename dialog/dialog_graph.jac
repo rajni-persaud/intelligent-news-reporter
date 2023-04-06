@@ -405,6 +405,16 @@ node current_preferences:dialog_state {
     }
 }
 
+node news_feed:dialog_state {
+    has name = "news_feed";
+
+    can process {
+        std.log("This is your news feed.");
+        visitor.next_state = (net.root()).info["jid"];
+        spawn here walker::filter_posts_by_entities(entities = visitor._context);
+    }   
+}
+
 node dialog_end:dialog_state {
     has name = "dialog_end";
     //the talker walker disengages when it gets here

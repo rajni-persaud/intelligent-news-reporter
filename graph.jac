@@ -24,6 +24,7 @@ graph app_graph {
         confirm_add_preferences = spawn add_preferences +[intent_transition(intent = "positive_confirmation")]+> node::confirm_preferences;
         confirm_update_preferences = spawn update_preferences +[intent_transition(intent = "positive_confirmation")]+> node::confirm_preferences;
         current_preferences = spawn dialog_root +[intent_transition(intent = "current_preferences")]+> node::current_preferences;
+        news_feed = spawn dialog_root ++> node::news_feed;
     }
 
 }
