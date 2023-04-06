@@ -309,7 +309,7 @@ walker entity_search {
     }
 
     // extract entities then we filter posts and report
-    if(utterance): ::extract_entities;
+    ::extract_entities;
     report spawn net.root() walker::filter_posts_by_entities(entities = entities);
 }
 

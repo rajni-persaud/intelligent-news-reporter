@@ -181,15 +181,18 @@ walker generate_news_feed {
     app_root : take --> node::dialog_root;
     dialog_root : take --> node::news_feed;
 
-    dialog_state {
+    news_feed {
         here::process;
+        here::generate_news_feed;
         
         if(next_state) {
             next_node = *(next_state);
             take next_node;
             prev_state = here.info["jid"];
             next_state = null;
-        } 
+        }
+
+        disengage; 
 
     }
 }
