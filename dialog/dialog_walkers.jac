@@ -184,6 +184,7 @@ walker generate_news_feed {
     news_feed {
         here::process;
         here::generate_news_feed;
+        here::resume; //resume from previous walk
         
         if(next_state) {
             next_node = *(next_state);
@@ -191,6 +192,8 @@ walker generate_news_feed {
             prev_state = here.info["jid"];
             next_state = null;
         }
+
+        // report here;
 
         disengage; 
 

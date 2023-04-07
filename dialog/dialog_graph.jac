@@ -416,16 +416,17 @@ node news_feed:dialog_state {
 
     can generate_news_feed {
         std.log("This is your news feed.");
-        entity_data = {
-            "tag": [
-            {
-                "text": "crime",
-                "confidence": 0.9580476880073547
-            }
-            ]
-        };
+        report visitor._context;
+        // entity_data = {
+        //     "tag": [
+        //     {
+        //         "text": "crime",
+        //         "confidence": 0.9580476880073547
+        //     }
+        //     ]
+        // };
 
-        report spawn net.root() walker::filter_posts_by_entities(entities = entity_data);
+        // report spawn net.root() walker::filter_posts_by_entities(entities = entity_data);
     }   
 }
 
