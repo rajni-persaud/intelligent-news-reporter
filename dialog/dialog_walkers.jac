@@ -183,8 +183,8 @@ walker generate_news_feed {
 
     news_feed {
         here::process;
+        here::get_session;
         here::generate_news_feed;
-        here::resume; //resume from previous walk
         
         if(next_state) {
             next_node = *(next_state);

@@ -414,19 +414,34 @@ node news_feed:dialog_state {
         visitor.next_state = (net.root()).info["jid"];
     }
 
+    can get_session {
+            if(visitor.session_id): _session = spawn net.root() walker::load_user_session(session_id = visitor.session_id);
+            else: _session = spawn net.root() walker::load_user_session;
+
+            visitor.session_id = _session.session_id;
+            if(_session.session_data) {
+                for item in _session.session_data.dict::keys {
+                    if(item == "_context"): visitor._context[item] = _session.session_data[item];
+                }
+            }
+    }
+
     can generate_news_feed {
         std.log("This is your news feed.");
-        report visitor._context;
-        // entity_data = {
-        //     "tag": [
-        //     {
-        //         "text": "crime",
-        //         "confidence": 0.9580476880073547
-        //     }
-        //     ]
-        // };
-
-        // report spawn net.root() walker::filter_posts_by_entities(entities = entity_data);
+        if(visitor._context) {
+            entity_data = {
+                "tag": [
+                    {
+                        "text": "crime",
+                        "confidence": 0.9580476880073547
+                    }
+                ]
+            };
+            report spawn net.root() walker::filter_posts_by_entities(entities = entity_data);
+        }
+        else {
+            report "_context not found";
+        }
     }   
 }
 
