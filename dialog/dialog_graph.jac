@@ -421,7 +421,7 @@ node news_feed:dialog_state {
             visitor.session_id = _session.session_id;
             if(_session.session_data) {
                 for item in _session.session_data.dict::keys {
-                    if(item == "_context"): visitor._context[item] = _session.session_data[item];
+                    if(item != "utterance"): visitor.context[item] = _session.session_data[item];
                 }
             }
     }
@@ -429,15 +429,23 @@ node news_feed:dialog_state {
     can generate_news_feed {
         std.log("This is your news feed.");
         if(visitor._context) {
-            entity_data = {
-                "tag": [
-                    {
-                        "text": "crime",
-                        "confidence": 0.9580476880073547
-                    }
-                ]
-            };
-            report spawn net.root() walker::filter_posts_by_entities(entities = entity_data);
+            // entity_data = {
+            //     "tag": [
+            //         {
+            //             "text": "crime",
+            //             "confidence": 0.9580476880073547
+            //         }
+            //     ]
+            // };
+            entity_data = {};
+            for entity in visitor._context {
+                entity_data[entity] = [];
+                for p in visitor._context[entity] {
+                    entity_data[entity].list::append({"text": p});
+                }
+            }
+            // report spawn net.root() walker::filter_posts_by_entities(entities = entity_data);
+            report {"context": entity_data};
         }
         else {
             report "_context not found";
