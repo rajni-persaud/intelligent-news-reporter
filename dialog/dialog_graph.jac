@@ -270,8 +270,8 @@ node add_preferences:dialog_state {
                 // if entity not in _context; add it
                 if (!(entity in visitor.preferences.dict::keys)): visitor.preferences[entity] = [];
                 for _data in visitor.entity_data[entity]{
-                    if(_data["text"] in visitor.preferences[entity]): std.log("already subscribed to "+entity+": "+_data["text"]);
-                    else: visitor.preferences[entity].list::append(_data["text"]);
+                    if(_data in visitor.preferences[entity]): std.log("already subscribed to "+entity+": "+_data["text"]);
+                    else: visitor.preferences[entity].list::append(_data);
                 }
             }
         }
@@ -280,7 +280,15 @@ node add_preferences:dialog_state {
         if (!next_node){
             try {
                 state_responses = file.load_json(global.state_responses);
-                response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=visitor.preferences);
+                preferences_data = {};
+                for entity in visitor.preferences{
+                    if (!(entity in preferences_data.dict::keys)): preferences_data[entity] = [];
+                    for _data in visitor.preferences[entity]{
+                        if(_data["text"] in preferences_data[entity]): continue;
+                        else: preferences_data[entity].list::append(_data["text"]);
+                    }
+                }
+                response_list = utils.replace_placeholders(string_or_collection=state_responses["add_preferences"], placeholders=preferences_data);
                 visitor.response = rand.choice(response_list);
             } else {
                 std.log("Could not load state responses.");
@@ -372,8 +380,16 @@ node confirm_preferences:dialog_state{
         
         try {
             state_responses = file.load_json(global.state_responses);
-            if (visitor._debug["trail"][-1] == "add_preferences"): response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=visitor.preferences);
-            else: response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_update_preferences"], placeholders=visitor.preferences);
+            preferences_data = {};
+                for entity in visitor.preferences{
+                    if (!(entity in preferences_data.dict::keys)): preferences_data[entity] = [];
+                    for _data in visitor.preferences[entity]{
+                        if(_data["text"] in preferences_data[entity]): continue;
+                        else: preferences_data[entity].list::append(_data["text"]);
+                    }
+                }
+            if (visitor._debug["trail"][-1] == "add_preferences"): response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_add_preferences"], placeholders=preferences_data);
+            else: response_list = utils.replace_placeholders(string_or_collection=state_responses["confirm_update_preferences"], placeholders=preferences_data);
             visitor.response = rand.choice(response_list);
         } else {
             std.log("Could not load state responses.");
@@ -429,23 +445,7 @@ node news_feed:dialog_state {
     can generate_news_feed {
         std.log("This is your news feed.");
         if(visitor._context) {
-            // entity_data = {
-            //     "tag": [
-            //         {
-            //             "text": "crime",
-            //             "confidence": 0.9580476880073547
-            //         }
-            //     ]
-            // };
-            entity_data = {};
-            for entity in visitor._context {
-                entity_data[entity] = [];
-                for p in visitor._context[entity] {
-                    entity_data[entity].list::append({"text": p});
-                }
-            }
-            // report spawn net.root() walker::filter_posts_by_entities(entities = entity_data);
-            report {"context": entity_data};
+            report spawn net.root() walker::filter_posts_by_entities(entities = visitor._context);
         }
         else {
             report "_context not found";
