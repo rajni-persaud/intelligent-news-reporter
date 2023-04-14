@@ -323,8 +323,8 @@ node update_preferences:dialog_state {
                 // if entity not in _context; add it
                 if (!(entity in visitor.preferences.dict::keys)): visitor.preferences[entity] = [];
                 for _data in visitor.entity_data[entity]{
-                    if(_data["text"] in visitor.preferences[entity]): continue;
-                    else: visitor.preferences[entity].list::append(_data["text"]);
+                    if(_data in visitor.preferences[entity]): continue;
+                    else: visitor.preferences[entity].list::append(_data);
                 }
             }
         }
