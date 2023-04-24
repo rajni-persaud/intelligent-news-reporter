@@ -517,14 +517,14 @@ walker relate_posts {
             
             // generates hbd clusters based on umap embeddings
             if (cluster_method == "hdbscan") {
-                hdbscan_data = spawn here walker::get_hdbscan_clusters(embeddings=umap_embeddings);
-                clusters = inr.zip_list(posts_jid, hdbscan_data);
+                hdbscan_data = spawn here walker::get_hdbscan_clusters(umap_embeddings=umap_embeddings);
+                clusters = inr.zip_list(d_keys=posts_jid, d_values=hdbscan_data);
             }
             
             // generates kmeans clusters based on umap embeddings
             elif (cluster_method == "kmeans"){
-                kmeans_data = spawn here walker::get_kmeans_clusters(embeddings=umap_embeddings, n_clusters=n_clusters);
-                clusters = inr.zip_list(posts_jid, kmeans_data);
+                kmeans_data = spawn here walker::get_kmeans_clusters(umap_embeddings=umap_embeddings, n_clusters=n_clusters);
+                clusters = inr.zip_list(d_keys=posts_jid, d_values=kmeans_data);
             }
             else{
                 report "cluster_method must be either 'hdbscan' or 'kmeans'.";
