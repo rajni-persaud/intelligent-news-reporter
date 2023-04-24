@@ -6,3 +6,5 @@ global min_intent_confidence = 0.2;
 global min_sentiment_confidence = 0.2;
 global tfm_ner_training_data = './data/ner_data.json';
 global tfm_ner_model_output_path = './ai/models/tfm_ner';
+global faq_data = './data/faqs.json';
+global min_faq_confidence = 0.02;
