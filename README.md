@@ -525,8 +525,8 @@ You'll need to run __walker get_clusters__ at least once before running this req
 
 `sudo apt install cargo`
 
-`cargo install fmn`
+`cargo install fnm`
 
-`fmn use 16`
+`fnm use 16`
 
-`fmn alias 16 default`
+`fnm alias 16 default`
