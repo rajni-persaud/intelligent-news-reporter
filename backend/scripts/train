@@ -1,0 +1,3 @@
+walker run tfm_ner_train_model
+walker run tfm_ner_save_model
+walker run tfm_ner_load_model
