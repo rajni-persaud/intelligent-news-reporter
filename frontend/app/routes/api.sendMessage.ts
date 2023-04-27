@@ -20,3 +20,43 @@ export async function action({ request }: ActionArgs) {
     },
   });
 }
+
+export function walker_run(name: string, utterance="", nd = null) {
+  name = "talker";
+  var server = "http://localhost:8000";
+  var sentinel_id = "";
+  var token = "";
+
+  var query = `
+  {
+    "name": "${name}",
+    "ctx": {"utterance": "${utterance}"},
+    "snt": "${sentinel_id}",
+    "detailed":"false"
+  }
+  `;
+
+  if(nd) { //if we have a node param
+    query = `
+    {
+      "name": "${name}",
+      "nd" : "${nd}",
+      "ctx": {"utterance": "${utterance}"},
+      "snt": "${sentinel_id}",
+      "detailed":"false"
+    }
+    `;
+  }
+
+  return fetch(`${server}/js/walker_run`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `token ${token}`
+    },
+    body: query,
+  }).then(function (result) {
+    return result.json();
+  });
+}
+
