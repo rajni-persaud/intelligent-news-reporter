@@ -1,0 +1,11 @@
+js.session
+mydatabase
+main.jir
+.dot
+ai/models/*/
+results/
+train/
+__pycache__
+/.jaseci_logs
+/.vscode
+news_posts_test.json
