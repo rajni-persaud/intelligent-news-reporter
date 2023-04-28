@@ -13,6 +13,7 @@ export async function action({ request }: ActionArgs) {
     { msg: "This is the response", type: "received" },
   ];
   console.log({ setMessages: messages });
+  console.log(walker_run('talker', 'hi'));
 
   return redirect("/", {
     headers: {
@@ -24,8 +25,8 @@ export async function action({ request }: ActionArgs) {
 export function walker_run(name: string, utterance="", nd = null) {
   name = "talker";
   var server = "http://localhost:8000";
-  var sentinel_id = "";
-  var token = "";
+  var sentinel_id = "urn:uuid:5bcb5823-f594-4af0-9aca-ad1a1ac30f59";
+  var token = "b95f225361b0169a9cf7476dc3b96de62b68a7279c33df2c46bcc6fe63da84e9";
 
   var query = `
   {
