@@ -7,13 +7,14 @@ export async function action({ request }: ActionArgs) {
   const msg = formData.get("msg");
   const cookieHeader = request.headers.get("Cookie");
   const currentMessages = (await messagesCookie.parse(cookieHeader)) || [];
+  const response = await walker_run();
   const messages = [
     ...currentMessages,
     { msg, type: "sent" },
-    { msg: "This is the response", type: "received" },
+    { msg: response, type: "received" },
   ];
   console.log({ setMessages: messages });
-  console.log(walker_run('talker', 'hi'));
+ 
 
   return redirect("/", {
     headers: {
@@ -22,11 +23,14 @@ export async function action({ request }: ActionArgs) {
   });
 }
 
-export function walker_run(name: string, utterance="", nd = null) {
-  name = "talker";
+export async function walker_run() {
+  // name: string, utterance="", nd = null
+  var name = "get_post";
   var server = "http://localhost:8000";
-  var sentinel_id = "urn:uuid:5bcb5823-f594-4af0-9aca-ad1a1ac30f59";
-  var token = "b95f225361b0169a9cf7476dc3b96de62b68a7279c33df2c46bcc6fe63da84e9";
+  var sentinel_id = "urn:uuid:91be117d-02fe-44bf-a150-d38f2b04c8e2";
+  var token = "bb368ae19adaed976a00d482cb78d128573895485305a7a0b1baf186f3370348";
+  var utterance = "";
+  var nd = "urn:uuid:86cdc78c-18f7-4ad0-b54d-13b9a0ed0937";
 
   var query = `
   {
@@ -42,7 +46,7 @@ export function walker_run(name: string, utterance="", nd = null) {
     {
       "name": "${name}",
       "nd" : "${nd}",
-      "ctx": {"utterance": "${utterance}"},
+      "ctx": {},
       "snt": "${sentinel_id}",
       "detailed":"false"
     }
@@ -57,7 +61,19 @@ export function walker_run(name: string, utterance="", nd = null) {
     },
     body: query,
   }).then(function (result) {
+    if (!result.ok) {
+      throw new Error(`HTTP error ${result.status}`);
+    }
     return result.json();
+  }).then(function (data: { report: { node: { jid: string } }[] }): string {
+    const { report } = data;
+    console.log(data);
+    if (!report || report.length === 0 || !report[0] || !report[0]) {
+      throw new Error('Invalid response data');
+    }
+    return report[0].jid;
+  }).catch(function (error) {
+    console.error(error);
+    throw error;
   });
 }
-
