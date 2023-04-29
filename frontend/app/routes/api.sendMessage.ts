@@ -7,7 +7,7 @@ export async function action({ request }: ActionArgs) {
   const msg = formData.get("msg");
   const cookieHeader = request.headers.get("Cookie");
   const currentMessages = (await messagesCookie.parse(cookieHeader)) || [];
-  const response = await walker_run();
+  const response = await walker_run(utterance=msg);
   const messages = [
     ...currentMessages,
     { msg, type: "sent" },
@@ -23,19 +23,17 @@ export async function action({ request }: ActionArgs) {
   });
 }
 
-export async function walker_run() {
+export async function walker_run(utterance="", nd = null) {
   // name: string, utterance="", nd = null
-  var name = "get_post";
+  var name = "talker";
   var server = "http://localhost:8000";
-  var sentinel_id = "urn:uuid:91be117d-02fe-44bf-a150-d38f2b04c8e2";
-  var token = "bb368ae19adaed976a00d482cb78d128573895485305a7a0b1baf186f3370348";
-  var utterance = "";
-  var nd = "urn:uuid:86cdc78c-18f7-4ad0-b54d-13b9a0ed0937";
-
+  var sentinel_id = "urn:uuid:83151b6e-0f54-49f6-97c7-99280bb44683";
+  var token = "10870a4739afd80259351d640d5877a79f26b5fc0f6d667fc78f39f9a4b95e14";
+  
   var query = `
   {
     "name": "${name}",
-    "ctx": {"utterance": "${utterance}"},
+    "ctx": {"utterance": "${utterance}", "verbose": "true"},
     "snt": "${sentinel_id}",
     "detailed":"false"
   }
@@ -46,7 +44,7 @@ export async function walker_run() {
     {
       "name": "${name}",
       "nd" : "${nd}",
-      "ctx": {},
+      "ctx": {"utterance": "${utterance}", "verbose": "true"},
       "snt": "${sentinel_id}",
       "detailed":"false"
     }
@@ -65,13 +63,13 @@ export async function walker_run() {
       throw new Error(`HTTP error ${result.status}`);
     }
     return result.json();
-  }).then(function (data: { report: { node: { jid: string } }[] }): string {
+  }).then(function (data: { report: { node: { response: string } }[] }): string {
     const { report } = data;
     console.log(data);
-    if (!report || report.length === 0 || !report[0] || !report[0]) {
+    if (!report || report.length === 0 ) {
       throw new Error('Invalid response data');
     }
-    return report[0].jid;
+    return report[0].response;
   }).catch(function (error) {
     console.error(error);
     throw error;
