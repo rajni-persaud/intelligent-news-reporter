@@ -1,7 +1,6 @@
 walker import_news_data {
-    has file_path;
+    has url;
 
-    can file.load_json;
     can inr.remove_html_tags;
 
     root: take -->[0]; //if at root, walk to app_root node
@@ -12,7 +11,7 @@ walker import_news_data {
         for n in post_nodes: destroy n; // delete all post nodes
 
         try {
-            news_posts = file.load_json(file_path); //get list of news posts
+            news_posts = spawn here walker::get_news_data(url=url); //get list of news posts
             
             for n in news_posts {
 
@@ -45,9 +44,10 @@ walker import_news_data {
 walker get_news_data {
     can inr.get_news_posts;
 
-    has url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=API_KEY';
+    has anchor news_data;
+    has url;
 
-    report inr.get_news_posts(url=url);
+    news_data = inr.get_news_posts(url=url);
 }
 
 
