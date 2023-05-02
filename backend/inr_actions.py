@@ -2,6 +2,7 @@ from jaseci.actions.live_actions import jaseci_action
 import re
 import dateparser
 from datetime import date
+import requests
 
 @jaseci_action(act_group=["inr"], allow_remote=True)
 def remove_html_tags(text: str):
@@ -114,3 +115,9 @@ def replace_placeholders(string_or_collection, placeholders):
 
     else:
         raise TypeError('Input must be a string or a list of strings.')
+    
+
+@jaseci_action(act_group=["inr"], allow_remote=True)    
+def get_news_posts(url):
+    response = requests.get(url)
+    return response.json()['articles']

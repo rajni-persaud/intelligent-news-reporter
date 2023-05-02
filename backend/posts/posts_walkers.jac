@@ -42,6 +42,14 @@ walker import_news_data {
     }
 }
 
+walker get_news_data {
+    can inr.get_news_posts;
+
+    has url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=API_KEY';
+
+    report inr.get_news_posts(url=url);
+}
+
 
 # creates a post node
 walker create_post {
