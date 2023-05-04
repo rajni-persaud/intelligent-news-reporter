@@ -41,6 +41,62 @@ walker import_news_data {
     }
 }
 
+walker get_data {
+    has url;
+    news_posts = spawn here walker::get_news_data(url=url); //get list of news posts
+    report news_posts;
+}
+
+walker standardize_news_posts {
+
+    can use.qa_similarity;
+
+    has url;
+    news_posts = spawn here walker::get_news_data(url=url); //get list of news posts
+
+    sample_news_post = news_posts[0];
+
+    standardize_news_post = {
+        "title": null,
+        "description": null,
+        "source": null,
+        "link": null,
+        "image": null,
+        "published": null,
+        "code": null
+    };
+
+    for attr in standardize_news_post.d::keys {
+        similar_attr = "";
+        min_confidence = 0.1;
+        max_score = 0;
+
+        for key in sample_news_post.d::keys {
+            if(attr == key) {
+                standardize_news_post[attr] = sample_news_post[key];
+                std.log(attr + " - " + key);
+            }
+            else {
+                cos_score = use.qa_similarity(text1 = attr, text2 = key);
+                if(cos_score >= min_confidence && cos_score > max_score) {
+                    similar_attr = key;
+                    max_score = cos_score;
+                    std.log(attr + " - " + similar_attr);
+                }
+            }
+        }
+
+        if (similar_attr): standardize_news_post[attr] = sample_news_post[similar_attr];
+
+    }
+
+    report {
+        "sample_news_post": sample_news_post,
+        "standardize_news_post": standardize_news_post
+    };
+
+}
+
 walker get_news_data {
     can inr.get_news_posts;
 
