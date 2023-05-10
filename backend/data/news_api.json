@@ -1,0 +1,15 @@
+[
+    {
+        "resource": "https://newsapi.org/v2/top-headlines?country=us&apiKey=API_KEY",
+        "resource_type": "api",
+        "field_map": {
+            "title": "title",
+            "description": "description",
+            "source": "source",
+            "link": "url",
+            "image": "urlToImage",
+            "published": "publishedAt"
+        },
+        "path_to_data": ["articles"]
+    }
+]
