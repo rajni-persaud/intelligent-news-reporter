@@ -1,7 +1,11 @@
 walker import_news_data {
-    has url;
 
+    has file_path = "data/news_api.json";
+
+    can file.load_json;
     can inr.remove_html_tags;
+
+    resources = file.load_json(file_path);
 
     root: take -->[0]; //if at root, walk to app_root node
     app_root: take --> node::posts; //if at app_root, walk to posts node
@@ -11,20 +15,19 @@ walker import_news_data {
         for n in post_nodes: destroy n; // delete all post nodes
 
         try {
-            news_posts = spawn here walker::get_news_data(url=url); //get list of news posts
-            report news_posts;
+            news_data = spawn here walker::get_news_data(url=resources[0]["resource"]); //get list of news posts
+            path_to_data = resources[0]["path_to_data"];
+            news_posts = news_data[path_to_data[0]][path_to_data[1]];
             
             for n in news_posts {
 
                 // create post node with content from JSON
-                nd = spawn node::post(
-                    title = n["title"], 
-                    description = inr.remove_html_tags(text = n["description"]), 
-                    source = n["source"], 
-                    link = n["link"], 
-                    image = n["image"], 
-                    published = n["published"], 
-                    code = n["code"]); 
+                nd = spawn node::post(); 
+
+                for attr in resources[0]["field_map"] {
+                    field_map_value = resources[0]["field_map"][attr];
+                    nd.context[attr] = n[field_map_value];
+                }
 
                 //connect the new post node to the posts node that we're currently on
                 //with an edge that is described by the id of the posts node

@@ -1,5 +1,7 @@
 [
     {
+        "name": "Top Headlines - USA",
+        "description": "Top Headlines - USA",
         "resource": "https://newsapi.org/v2/top-headlines?country=us&apiKey=API_KEY",
         "resource_type": "api",
         "field_map": {
@@ -10,6 +12,6 @@
             "image": "urlToImage",
             "published": "publishedAt"
         },
-        "path_to_data": ["articles"]
+        "path_to_data": ["response", "articles"]
     }
 ]
