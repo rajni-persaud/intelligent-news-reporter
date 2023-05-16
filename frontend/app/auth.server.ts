@@ -11,8 +11,8 @@ export let authenticator = new Authenticator<User>(sessionStorage);
 let googleStrategy = new GoogleStrategy(
   {
     clientID:
-      "867823900606-7ho4j9mumanh9ajqkuua3pcrh4coh3hi.apps.googleusercontent.com",
-    clientSecret: "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",
+      "<Client_ID>",
+    clientSecret: "<Client_secret>",
     callbackURL: "http://localhost:3000/auth/google/callback/",
     accessType: "online",
     scope: ["profile", "email"],
