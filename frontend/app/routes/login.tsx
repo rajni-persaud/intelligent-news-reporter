@@ -1,26 +1,35 @@
 // import { useRouteData } from "@remix-run/react";
-import { Link, useFetcher } from "@remix-run/react";
+import { Form, Link, useFetcher } from "@remix-run/react";
 // import { Redirect } from "react-router";
-import { useGoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import GoogleSignin from "~/components/GoogleSignin";
-
+import { authenticator } from "~/auth.server";
+import { LoaderArgs } from "@remix-run/node";
+import { redirect } from "react-router";
 
 export let meta = () => {
-    return [
-      {
-        title: "Login - My App",
-        description: "Login to My App to access your account.",
-      },
-    ];
-  };
-  
+  return [
+    {
+      title: "Login - My App",
+      description: "Login to My App to access your account.",
+    },
+  ];
+};
+
+export let loader = async ({ request }: LoaderArgs) => {
+  const user = await authenticator.isAuthenticated(request);
+
+  if (user) {
+    return redirect("/dashboard");
+  }
+  console.log({ user });
+  return { user };
+};
 
 function Login() {
-//   const data = useRouteData<{ isLoggedIn: boolean }>();
+  //   const data = useRouteData<{ isLoggedIn: boolean }>();
 
-//   if (data.isLoggedIn) {
-//     return <Redirect to="/dashboard" />;
-//   }
+  //   if (data.isLoggedIn) {
+  //     return <Redirect to="/dashboard" />;
+  //   }
 
   return (
     <div>
@@ -36,10 +45,9 @@ function Login() {
       </form>
       <Link to="/register">Don't have an account? Register now!</Link>
 
-      <GoogleOAuthProvider clientId="59972291133-m408r82jv4usql21kncjloi8pclb3mgv.apps.googleusercontent.com"><GoogleSignin></GoogleSignin></GoogleOAuthProvider>
-
-
-
+      <Form action="/auth/google" method="post">
+        <button>Login with Google</button>
+      </Form>
     </div>
   );
 }
@@ -51,8 +59,8 @@ function Login() {
 //   };
 // }
 
-export function loader() {
-  return { isLoggedIn: false };
-}
+// export function loader() {
+//   return { isLoggedIn: false };
+// }
 
-export default Login
+export default Login;
