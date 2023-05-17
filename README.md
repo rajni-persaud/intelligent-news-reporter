@@ -533,3 +533,96 @@ close terminal
 `nvm use 16`
 
 `nvm alias 16 default`
+
+# Create Google Client Id
+
+Go to [https://console.cloud.google.com/apis/credentials/](https://console.cloud.google.com/apis/credentials/)
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/google_console_credentials.png?raw=true)
+
+click create credentials and select o auth client id from dropdown
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image2.png?raw=true)
+
+If you have no OAuth 2.0 Client IDs, you'll have to configure consent screen
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image3.png?raw=true)
+
+Select External
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image4.png?raw=true)
+
+click create
+
+Now you can fill out the required items (app name, email address and developer contact)
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image5.png?raw=true)
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image6.png?raw=true)
+
+save and continue
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image7.png?raw=true)
+
+save and continue
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image8.png?raw=true)
+
+save and continue
+
+click on credentials again
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/google_console_credentials.png?raw=true)
+
+click create credentials and select o auth client id from dropdown
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image2.png?raw=true)
+
+
+select web application
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image9.png?raw=true)
+
+
+fill the form as shown
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image10.png?raw=true)
+
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image11.png?raw=true)
+
+then click create
+
+
+Ensure you have jsserv running on backend
+
+`jsserv runserver 0.0.0.0:8001`
+
+Go to http://localhost:8001/admin/
+
+Login with superuser account
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image12.png?raw=true)
+
+Scroll to the bottom and click on add social application
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image13.png?raw=true)
+
+fill the form, using your client and secret id from google console
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image15.png?raw=true)
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image14.png?raw=true)
+
+Let's Test it!
+
+go to http://localhost:8001/auth/examples/google/
+
+click login with google
+
+select your account
+
+You should see something similar to this:
+
+It might take longer when you login for very first time
+
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image16.png?raw=true)
