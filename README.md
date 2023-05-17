@@ -542,7 +542,7 @@ Go to [https://console.cloud.google.com/apis/credentials/](https://console.cloud
 
 click create credentials and select o auth client id from dropdown
 
-![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image2.png?raw=true)
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image2.png?raw=true)
 
 If you have no OAuth 2.0 Client IDs, you'll have to configure consent screen
 
