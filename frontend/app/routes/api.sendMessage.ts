@@ -2,6 +2,18 @@ import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { messagesCookie } from "~/cookies.server";
 
+import { LoaderArgs, json} from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { authenticator } from "~/auth.server";
+
+export async function loader({ request }: LoaderArgs) {
+  const user = await authenticator.isAuthenticated(request);
+
+  if (!user) return redirect("/login");
+
+  return json({ user });
+}
+
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
   const msg = formData.get("msg");
@@ -24,11 +36,12 @@ export async function action({ request }: ActionArgs) {
 }
 
 export async function walker_run(utterance="", nd = null) {
+  const { user } = useLoaderData<typeof loader>();
   // name: string, utterance="", nd = null
   var name = "talker";
   var server = "http://localhost:8000";
-  var sentinel_id = "urn:uuid:83151b6e-0f54-49f6-97c7-99280bb44683";
-  var token = "10870a4739afd80259351d640d5877a79f26b5fc0f6d667fc78f39f9a4b95e14";
+  var sentinel_id = "urn:uuid:1a079641-2571-4b18-a6fe-4989055e6b57";
+  var token = user.token;
   
   var query = `
   {
