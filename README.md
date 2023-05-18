@@ -581,14 +581,14 @@ click create credentials and select o auth client id from dropdown
 
 select web application
 
-![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image9.png?raw=true)
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image9.png?raw=true)
 
 
 fill the form as shown
-![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image10.png?raw=true)
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image10.png?raw=true)
 
 
-![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image11.png?raw=true)
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image11.png?raw=true)
 
 then click create
 
@@ -601,17 +601,17 @@ Go to http://localhost:8001/admin/
 
 Login with superuser account
 
-![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image12.png?raw=true)
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image12.png?raw=true)
 
 Scroll to the bottom and click on add social application
 
-![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image13.png?raw=true)
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image13.png?raw=true)
 
 fill the form, using your client and secret id from google console
 
-![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image15.png?raw=true)
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image15.png?raw=true)
 
-![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image14.png?raw=true)
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image14.png?raw=true)
 
 Let's Test it!
 
@@ -625,4 +625,4 @@ You should see something similar to this:
 
 It might take longer when you login for very first time
 
-![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/image16.png?raw=true)
+![alt text](https://github.com/rajni-persaud/intelligent-news-reporter/blob/main/images/image16.png?raw=true)
