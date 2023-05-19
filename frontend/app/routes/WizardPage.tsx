@@ -22,7 +22,7 @@ export async function action({request}: ActionArgs) {
 
     console.log({posts})
 
-    return redirect("/wizardpage")
+    return redirect("/newsfeed")
 }
 
 export async function loader({request}: ActionArgs) {

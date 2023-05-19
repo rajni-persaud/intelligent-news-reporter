@@ -4,6 +4,7 @@ import {*} with "./posts/posts_walkers.jac";
 import {*} with "./tags/tags_walkers.jac";
 import {*} with "./dialog/dialog_walkers.jac";
 import {*} with "./faq_dialog/faq_dialog_walkers.jac";
+import {*} with "./preferences/preferences_walkers.jac";
 import {*} with "./users/users_walkers.jac";
 
 import {*} with 'ai/tfm_ner/tfm_ner_graph.jac';

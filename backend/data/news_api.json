@@ -2,7 +2,22 @@
     {
         "name": "Top Headlines - USA",
         "description": "Top Headlines - USA",
-        "resource": "https://newsapi.org/v2/top-headlines?country=us&apiKey=API_KEY",
+        "resource": "https://newsapi.org/v2/top-headlines?country=us&apiKey=937b4b994ad54f54b6cfdca031a120b6",
+        "resource_type": "api",
+        "field_map": {
+            "title": "title",
+            "description": "description",
+            "source": "source",
+            "link": "url",
+            "image": "urlToImage",
+            "published": "publishedAt"
+        },
+        "path_to_data": ["response", "articles"]
+    },
+    {
+        "name": "Top Headlines - GY",
+        "description": "Top Headlines - USA",
+        "resource": "https://newsapi.org/v2/top-headlines?country=us&apiKey=937b4b994ad54f54b6cfdca031a120b6",
         "resource_type": "api",
         "field_map": {
             "title": "title",

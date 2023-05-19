@@ -1,7 +1,7 @@
 walker import_news_data {
 
     has file_path = "data/news_api.json";
-    has selectedNewsSources;
+    has selectedNewsSources = [];
 
     can file.load_json;
     can inr.remove_html_tags;
@@ -20,7 +20,10 @@ walker import_news_data {
                 if (res["name"] in selectedNewsSources) {
                     news_data = spawn here walker::get_news_data(url=res["resource"]); //get list of news posts
                     path_to_data = res["path_to_data"];
-                    news_posts = news_data[path_to_data[0]][path_to_data[1]];
+                    data = news_data;
+                    for key in path_to_data:
+                        data = data[key];
+                    news_posts = data;
                     
                     for n in news_posts {
 
