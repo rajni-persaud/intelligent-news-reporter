@@ -1,3 +1,0 @@
-jac build main.jac
-sentinel set -snt active:sentinel -mode ir main.jir
-walker yield clear
