@@ -1,0 +1,9 @@
+actions load module jac_nlp.use_enc
+actions load module jac_nlp.tfm_ner
+actions load module jac_nlp.sentiment
+actions load module jac_nlp.t5_sum
+actions load module jac_nlp.use_qa
+actions load module jac_misc.cluster
+actions load local inr_actions.py
+jac build main.jac
+sentinel register -set_active true -mode ir main.jir
