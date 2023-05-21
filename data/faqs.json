@@ -1,0 +1,27 @@
+
+[
+    {
+        "question": "Can I subscribe to more than one tag when I sign up for your news updates?",
+        "answer": "Of course!"
+    },
+    {
+        "question": "Can I choose to receive news related to a specific country when I sign up for your updates?",
+        "answer": "Unfortunately, we haven't added this feature as yet."
+    },
+    {
+        "question": "Is there a way to sign up for news updates only from from a specific news source?",
+        "answer": "Definitely!"
+    },
+    {
+        "question": "Is it possible to subscribe to news updates from multiple sources and multiple tags, such as sports news from both ESPN and BBC?",
+        "answer": "Absolutely!"
+    },
+    {
+        "question": "What steps can I take to review or change my current news preferences?",
+        "answer": "You can change your preferences by simply saying something like: 'I'm not interested in finance news anymore. I want remove it from my daily news updates?' or 'I'd like to include news updates about fashion and beauty in my daily news updates.'"
+    },
+    {
+        "question": "How do I subscribe to your news service?",
+        "answer": "You can change your preferences by simply saying something like: 'I'd like to include news updates about fashion and beauty in my daily news updates.' or 'I want to subscribe to news updates from Kaieteur News.'"  
+    }
+]
