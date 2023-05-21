@@ -1,0 +1,67 @@
+{
+    "dialog_root": [
+        "Sorry I can't handle that just yet. Anything else I can help you with?",
+        "Hmmm...I'm not quite sure I can help with that."
+    ],
+    "greet": [
+        "Hello! Welcome to the latest news update from our AI-powered news reporter.",
+        "Hi there! It's great to have you with us today for the latest news.",
+        "Greetings! Our AI news reporter is ready to bring you up-to-date on all the latest headlines.",
+        "Welcome back! Our AI reporter is standing by to deliver the latest news and updates.",
+        "Good day! Our AI-powered news reporter is here to provide you with the latest and most accurate news.",
+        "Hello, and thank you for tuning in to our AI-powered news report. Let's get started with today's headlines.",
+        "Welcome! Our AI news reporter is ready to keep you informed with the latest news from around the world.",
+        "Hi, and thanks for joining us today. Our AI-powered news reporter is ready to provide you with the most up-to-date news and analysis.",
+        "Greetings, and thank you for choosing our AI-powered news service. Stay tuned for the latest news and updates.",
+        "Hello, and welcome to our AI news service. Our reporter is here to bring you the latest news and insights from around the world."
+    ],
+    "semantic_search": [
+        "Sure, let me find the latest news on that topic for you.",
+        "Let me check our database for relevant articles and news reports.",
+        "I can definitely help you with that. Let me look up the latest information on your topic of interest.",
+        "No problem, let me quickly scan through our news sources and see what I can find.",
+        "I'll search our archives for any relevant news stories and provide you with the most recent and accurate information.",
+        "I'll be happy to assist you with your search. Let me find the latest news on that topic for you.",
+        "Absolutely, I'll use my natural language processing capabilities to find the most relevant news stories related to your search query.",
+        "Let me use our semantic search capabilities to find the most up-to-date and relevant news articles for you.",
+        "I'm on it. Let me search through our news sources and filter out the most important and recent news on your topic.",
+        "Let me search our database and use our advanced AI algorithms to retrieve the most relevant news articles and reports for your search query."
+      ],
+      "entity_search": [
+        "Sure, let me find the latest news on that topic for you.",
+        "Let me check our database for relevant articles and news reports.",
+        "I can definitely help you with that. Let me look up the latest information on your topic of interest.",
+        "No problem, let me quickly scan through our news sources and see what I can find.",
+        "I'll search our archives for any relevant news stories and provide you with the most recent and accurate information.",
+        "I'll be happy to assist you with your search. Let me find the latest news on that topic for you.",
+        "Absolutely, I'll use my natural language processing capabilities to find the most relevant news stories related to your search query.",
+        "I'm on it. Let me search through our news sources and filter out the most important and recent news on your topic.",
+        "Let me search our database and use our advanced AI algorithms to retrieve the most relevant news articles and reports for your search query."
+    ],
+    "add_preferences": [
+      "Do you want to start getting updates about {{tag}}?",
+      "Do you want to start getting updates from {{news_source}}?",
+      "Do you want to start receiving updates about {{tag}} from {{news_source}}?"
+    ],
+    "update_preferences": [
+      "Do you want to stop getting updates about {{tag}}?",
+      "Do you want to stop getting updates from {{news_source}}?"
+    ],
+    "confirm_add_preferences": [
+      "You'll start getting updates about {{tag}}.",
+      "You'll start getting updates from {{news_source}}.",
+      "You'll start receiving updates about {{tag}} from {{news_source}}."
+    ],
+    "confirm_update_preferences": [
+      "You'll stop receiving updates about {{tag}}.",
+      "You'll stop receiving updates from {{news_source}}."
+    ],
+    "list_preferences": [
+      "Currently, you can subscribe to news posts by source and tags. Here's our list of news sources: {{list_of_news_sources}}. Here's our list of tags: {{list_of_tags}}."
+    ],
+    "current_preferences": [
+      "Here's the list of tags you are currently subscribed to: {{tag}}.",
+      "Here's the list of news sources you are currently subscribed to: {{news_source}}."
+    ]
+}
+  
