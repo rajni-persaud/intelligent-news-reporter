@@ -1,0 +1,4 @@
+walker yield clear
+graph delete active:graph
+graph create -set_active true
+sentinel register -set_active true -mode ir main.jir

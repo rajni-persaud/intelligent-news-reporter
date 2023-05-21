@@ -1,0 +1,3 @@
+actions load local inr_actions.py
+jac build main.jac
+sentinel set -snt active:sentinel -mode ir main.jir

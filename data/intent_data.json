@@ -1,0 +1,23 @@
+{
+  "semantic_search": [
+    "Can you show me news stories about artificial intelligence in healthcare?", 
+    "Find me news articles about climate change and renewable energy.",
+    "Show me news stories about the future of work.",
+    "What are the top news stories from Asia?",
+    "Show me news articles about the impact of climate change on California."
+  ],
+  "entity_search": [
+    "What were the top news stories of last week?",
+    "Show me news articles from the past month about cybersecurity.",
+    "Show me news stories about artificial intelligence in finance written by John Doe",
+    "What are the latest news stories written by Jane Smith?",
+    "What is the history of the COVID-19 pandemic?",
+    "Who are the key players involved in the political situation in France?", 
+    "What are some of the major companies in the technology industry?",
+    "What are some recent entertainment projects that The Guardian has covered?",
+    "Who are some of the top health and science experts featured in BBC News articles?",
+    "What are some of the main environmental concerns facing China right now?",
+    "Who are some of the notable figures involved in the corruption investigations in the country?",
+    "What are some of the most influential business leaders in the world?"
+  ]
+}
