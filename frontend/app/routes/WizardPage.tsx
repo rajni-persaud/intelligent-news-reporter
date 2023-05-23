@@ -8,6 +8,8 @@ export async function action({request}: ActionArgs) {
   const user = await authenticator.isAuthenticated(request, {failureRedirect: "/login"});
   const formData = await request.formData();
   const selectedNewsSources = formData.get("sources");
+  const selectedAreasOfInterest = formData.get("areasOfInterest");
+  
 
   const posts = await axios.post(`http://localhost:8000/js/walker_run`, {
       "name": "import_news_data",
@@ -21,6 +23,19 @@ export async function action({request}: ActionArgs) {
   }).then(res => res.data)
 
     console.log({posts})
+
+    const preferences = await axios.post(`http://localhost:8000/js/walker_run`, {
+      "name": "update_preferences",
+      "ctx": {updatedNewsSources: JSON.parse(selectedNewsSources?.toString() || ""), updatedInterests: JSON.parse(selectedAreasOfInterest?.toString() || "")},
+      "detailed": false
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `token ${user.token}`,
+    },
+  }).then(res => res.data)
+
+    console.log({preferences})
 
     return redirect("/newsfeed")
 }
@@ -125,7 +140,7 @@ const WizardPage = () => {
                 Choose the news sources you want to follow.
               </div>
               <ul className="mt-4 space-y-4">
-                {newsSources.map((source, index) => (
+                {newsSources?.map((source, index) => (
                   <li key={index}>
                     <label className="flex items-center">
                       <input
@@ -151,7 +166,7 @@ const WizardPage = () => {
                 Choose the areas of news that interest you the most.
               </div>
               <ul className="mt-4 space-y-4">
-                {areasOfInterest.map((area, index) => (
+                {areasOfInterest?.map((area, index) => (
                   <li key={index}>
                     <label className="flex items-center">
                       <input

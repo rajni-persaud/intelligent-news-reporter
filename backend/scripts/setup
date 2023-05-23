@@ -7,3 +7,4 @@ actions load module jac_misc.cluster
 actions load local inr_actions.py
 jac build main.jac
 sentinel register -set_active true -mode ir main.jir
+global sentinel set -snt active:sentinel

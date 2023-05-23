@@ -8,10 +8,11 @@ import { walker_run } from "~/utils/utils.server";
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request);
   const graph = await axios.post("http://localhost:8000/js/graph_active_get", {}, {headers: {Authorization: `token ${user?.token}`}});
+  console.log({graph: graph.data});
 
   if (!graph.data.success) {
-     await axios.post("http://localhost:8000/js/sentinel_active_global", {auto_run: "init", auto_create_graph: true}, {headers: {Authorization: `token ${user?.token}`}});
-     console.log({graph})
+     const createdGraph = await axios.post("http://localhost:8000/js/sentinel_active_global", {auto_run: "init", auto_create_graph: true}, {headers: {Authorization: `token ${user?.token}`}});
+     console.log({graph,createdGraph: createdGraph.data})
   }
 
   await axios.post("http://localhost:8000/js/sentinel_pull", {set_active: true}, {headers: {Authorization: `token ${user?.token}`}});
