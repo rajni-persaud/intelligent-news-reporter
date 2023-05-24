@@ -1,6 +1,45 @@
 import React from 'react';
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { ActionArgs, json, redirect } from "@remix-run/node";
+import { authenticator } from "~/auth.server";
+import axios from "axios";
+
+export async function loader({request}: ActionArgs) {
+  const user = await authenticator.isAuthenticated(request, {failureRedirect: "/login"});
+
+  const preferences = await axios.post(`http://localhost:8000/js/walker_run`, {
+      "name": "get_preferences",
+      "ctx": {},
+      "detailed": false
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `token ${user.token}`,
+    },
+  }).then(res => res.data)
+
+  const posts = await axios.post(`http://localhost:8000/js/walker_run`, {
+    "name": "list_posts",
+    "ctx": {},
+    "detailed": false
+}, {
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `token ${user.token}`,
+  },
+}).then(res => res.data)
+
+// if no news source is selected, go to wizardPage  
+if (!preferences.report?.[0].context?.news_sources) {
+    return redirect('/WizardPage');
+  }
+
+  return json({preferences: preferences.report?.[0].context, posts: posts.report?.[0]})
+}
 
 const NewsFeed: React.FC = () => {
+  const loaderData = useLoaderData()
+  const newsPreferences = loaderData?.preferences;
   const newsItems = [
     {
       id: 1,
