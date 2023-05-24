@@ -225,11 +225,14 @@ const WizardPage = () => {
             )}
             {currentStep < totalSteps ? (
               <button
-                onClick={handleNext}
-                className="inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-              >
-                Next
-              </button>
+              onClick={handleNext}
+              disabled={selectedNewsSources.length === 0}
+              className={`inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md ${
+                selectedNewsSources.length === 0 ? "text-gray-500 bg-gray-300 cursor-not-allowed" : "text-white bg-indigo-600 hover:bg-indigo-500"
+              } focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out`}
+            >
+              Next
+            </button>
             ) : (
                 <div className="inline-flex">
 <submitFetcher.Form method="post">
