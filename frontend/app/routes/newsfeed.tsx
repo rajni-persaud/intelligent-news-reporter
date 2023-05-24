@@ -34,43 +34,28 @@ if (!preferences.report?.[0].context?.news_sources) {
     return redirect('/WizardPage');
   }
 
-  return json({preferences: preferences.report?.[0].context, posts: posts.report?.[0]})
+  const transformedPosts = posts.report?.[0] === null ? [] : posts.report?.[0].map(item => item.context) ?? [];
+
+  return json({ preferences: preferences.report?.[0].context, posts: transformedPosts });
 }
 
 const NewsFeed: React.FC = () => {
   const loaderData = useLoaderData()
-  const newsPreferences = loaderData?.preferences;
-  const newsItems = [
-    {
-      id: 1,
-      title: 'Lorem Ipsum',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      author: 'John Doe',
-      timestamp: 'May 18, 2023',
-    },
-    {
-      id: 2,
-      title: 'Lorem Ipsum',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      author: 'John Doe',
-      timestamp: 'May 18, 2023',
-    },
-    // Add more news items here
-  ];
+  const posts = loaderData?.posts;
 
   return (
     <div className="h-screen bg-gray-200 flex items-center justify-center">
       <div className="max-w-3xl w-full mx-auto px-4">
-        {newsItems.map((item) => (
+        {posts.map((item) => (
           <div
             key={item.id}
             className="bg-white shadow rounded-lg p-4 mb-4"
           >
             <h2 className="text-xl font-bold mb-2">{item.title}</h2>
-            <p className="text-gray-600 mb-4">{item.content}</p>
+            <p className="text-gray-600 mb-4">{item.description}</p>
             <div className="flex items-center justify-between">
-              <p className="text-gray-500">{`By ${item.author}`}</p>
-              <p className="text-gray-500">{item.timestamp}</p>
+              <p className="text-gray-500">{`By ${item.source.name}`}</p>
+              <p className="text-gray-500">{item.published}</p>
             </div>
           </div>
         ))}
