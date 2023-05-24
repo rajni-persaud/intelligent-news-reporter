@@ -18,7 +18,7 @@ export let loader = async ({ request }: LoaderArgs) => {
   const user = await authenticator.isAuthenticated(request);
 
   if (user) {
-    return redirect("/dashboard");
+    return redirect("/newsfeed");
   }
   console.log({ user });
   return { user };
