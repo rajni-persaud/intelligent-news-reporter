@@ -40,7 +40,7 @@ export async function walker_run(utterance="", nd = null) {
   // name: string, utterance="", nd = null
   var name = "talker";
   var server = "http://localhost:8000";
-  var sentinel_id = "urn:uuid:1a079641-2571-4b18-a6fe-4989055e6b57";
+  var sentinel_id = "urn:uuid:034b2587-2211-4a46-9c4f-c1bb611fa27a";
   var token = user.token;
   
   var query = `

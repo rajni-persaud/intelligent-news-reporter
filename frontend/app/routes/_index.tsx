@@ -1,5 +1,5 @@
 import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { messagesCookie } from "~/cookies.server";
@@ -123,9 +123,69 @@ function InputArea() {
   const sendMessageFetcher = useFetcher();
   const inputRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState("");
+  const [transcript, setTranscript] = useState('');
+  const [isRunning, setIsRunning] = useState(false);
+
+
+  const handleTranscript = (event: SpeechRecognitionEvent) => {
+    for (const result of event.results) {
+      const recognitionResult: RecognitionResult = result[0];
+      setTranscript(recognitionResult.transcript);
+    }
+  }
+
+  const handleStart = () => {
+    console.log('setartasdf')
+    const recognitionSvc = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new recognitionSvc();
+    recognition.continuous = true;
+    recognition.lang = 'en-US';
+    recognition.onresult = handleTranscript;
+    recognition.start();
+    setIsRunning(true);
+  }
+
+  const handleStop = () => {
+    console.log('stop')
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    setIsRunning(false);
+    recognition.stop()
+    // setTranscript("")
+    handleSendClick()
+  }
+  
+  const submit = useSubmit();
+
+  const handleSendClick = () => {
+        if (inputRef.current?.value) {
+
+            const formData = new FormData();
+            formData.append('name', inputRef.current.value);
+            submit(formData, { method: 'post', action: `/api/sendMessage` });
+            setTranscript("")
+        }
+    }
 
   return (
     <div className=" px-4 pt-4 mb-2 sm:mb-0">
+      {isRunning ?
+              <button type="button" onClick={handleStop} className="text-primary-12 hover:text-gray-10 focus:outline-none py-2 px-4">
+
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                  <path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z" />
+                  <path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z" />
+                </svg>
+              </button>
+
+              :
+              <button type="button" onClick={handleStart} className="text-gray-10 hover:text-primary-12 focus:outline-none py-2 px-4">
+
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                </svg>
+              </button>
+
+            }
       <sendMessageFetcher.Form
         method="post"
         action="/api/sendMessage"
@@ -136,8 +196,9 @@ function InputArea() {
       >
         <div className="relative flex">
           <span className="absolute inset-y-0 flex items-center">
-            <button
+            {/* <button
               type="button"
+              onClick={handleStart}
               className="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
             >
               <svg
@@ -154,14 +215,19 @@ function InputArea() {
                   d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
                 ></path>
               </svg>
-            </button>
+            </button> */}
+            
           </span>
           <input type="text" name="msg" hidden value={message} />
           <input
             ref={inputRef}
+            type="text"
+            value={transcript}
             name="msg"
             placeholder="Write your message!"
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(event) => setTranscript(event.target.value)}
+
+            // onChange={(e) => setMessage(e.target.value)}
             className="w-full border border-gray-6 focus:ring-2 focus:ring-primary-8/50 focus:outline-none focus:placeholder-gray-7 text-gray-12 placeholder-gray-9 pl-12 bg-gray-4 rounded-md py-3"
           />
           <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
