@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+
 const Feed: React.FC = () => {
-  const loaderData = useLoaderData()
+  const loaderData = useLoaderData();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -11,7 +14,18 @@ const Feed: React.FC = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
-  // remove here
+
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
+
+  const handleFilter = () => {
+    console.log(`Sending query: ${query}`);
+    setIsModalOpen(false);
+    setShowAlert(true);
+    // setQuery('');
+  };
+
   const posts = [
     {
         "name": "post",
@@ -417,19 +431,8 @@ const Feed: React.FC = () => {
 
 // to here
 
-const [query, setQuery] = useState('');
 
-const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
-
-  const handleFilter = () => {
-    // Handle sending the query (you can implement your logic here)
-    console.log(`Sending query: ${query}`);
-    setQuery('');
-  };
-
-return (
+  return (
     <div>
       <nav className="bg-gray-800 sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-2 flex items-center justify-between">
@@ -488,9 +491,19 @@ return (
           </div>
         </div>
       )}
+
+      {showAlert && (
+        <div className="alert" role="alert">
+          Query: {query}
+          <button
+            type="button"
+            className="closebtn"
+            onClick={() => setShowAlert(false)}
+          >&times;</button>
+        </div>
+      )}
     </div>
   );
-  
 };
 
 export default Feed;
